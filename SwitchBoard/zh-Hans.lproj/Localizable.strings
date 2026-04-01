@@ -1,0 +1,72 @@
+/* Status */
+"status.working" = "运行中";
+"status.done" = "已完成";
+"status.needs_input" = "等待输入";
+"status.needs_confirm" = "等待确认";
+"status.idle" = "已结束";
+
+/* Status descriptions */
+"status.desc.working" = "AI正在执行任务";
+"status.desc.done" = "任务已完成";
+"status.desc.needs_input" = "正在等待用户输入";
+"status.desc.needs_confirm" = "需要工具执行确认";
+"status.desc.idle" = "会话已结束";
+
+/* Dashboard */
+"dashboard.title" = "Switchboard";
+"dashboard.empty" = "没有正在运行的Claude Code会话";
+"dashboard.active_count" = "活跃 %lld / 共 %lld";
+"popover.open_dashboard" = "打开仪表盘";
+"dashboard.search" = "搜索会话...";
+"dashboard.history" = "历史记录";
+"dashboard.history_clear" = "全部删除";
+"dashboard.history_empty" = "暂无记录";
+"dashboard.just_now" = "刚刚";
+"dashboard.minutes_ago" = "%lld分钟前";
+"dashboard.hours_ago" = "%lld小时前";
+"dashboard.days_ago" = "%lld天前";
+
+/* Session Memo */
+"session.memo_placeholder" = "输入备注...";
+"session.add_memo" = "添加备注";
+"session.edit_memo" = "编辑备注";
+"session.delete_memo" = "删除备注";
+
+/* Settings */
+"settings.tab.general" = "通用";
+"settings.tab.notification" = "通知";
+"settings.tab.about" = "关于";
+"settings.refresh" = "刷新";
+"settings.poll_interval" = "刷新间隔";
+"settings.seconds" = "%lld秒";
+"settings.auto_cleanup" = "清理已结束的会话";
+"settings.cleanup_off" = "不使用";
+"settings.cleanup_minutes" = "%lld分钟后";
+"settings.window" = "窗口";
+"settings.always_on_top" = "始终置顶";
+"settings.system" = "系统";
+"settings.launch_at_login" = "登录时启动";
+
+/* Notification */
+"settings.notification" = "通知";
+"settings.notify_on_complete" = "任务完成时通知（含提示音）";
+"settings.slack_toggle" = "发送通知到 Slack";
+"settings.slack_url_placeholder" = "粘贴 Slack 传入 Webhook URL";
+"settings.slack_help" = "从 Slack 应用设置 → 传入 Webhook 复制 URL";
+"settings.discord_toggle" = "发送通知到 Discord";
+"settings.discord_url_placeholder" = "粘贴 Discord Webhook URL";
+"settings.discord_help" = "从服务器设置 → 集成 → Webhook 复制 URL";
+"settings.telegram_toggle" = "发送通知到 Telegram";
+"settings.telegram_bot_token" = "Bot Token（从 BotFather 获取）";
+"settings.telegram_chat_id" = "Chat ID";
+"settings.telegram_help" = "通过 BotFather 创建机器人，然后输入令牌和聊天 ID";
+
+/* Sort */
+"sort.status" = "自动";
+"sort.custom" = "自定义";
+
+/* Credit */
+"credit.title" = "关于";
+"credit.version %@" = "版本 %@";
+"credit.description" = "一目了然地监控Claude Code会话状态。";
+"credit.author" = "Made by kkirk studio";

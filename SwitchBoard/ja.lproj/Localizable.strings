@@ -1,0 +1,72 @@
+/* Status */
+"status.working" = "実行中";
+"status.done" = "完了";
+"status.needs_input" = "入力待ち";
+"status.needs_confirm" = "承認待ち";
+"status.idle" = "終了";
+
+/* Status descriptions */
+"status.desc.working" = "AIがタスクを実行しています";
+"status.desc.done" = "タスクが完了しました";
+"status.desc.needs_input" = "ユーザーの入力を待っています";
+"status.desc.needs_confirm" = "ツールの実行承認が必要です";
+"status.desc.idle" = "セッションが終了しました";
+
+/* Dashboard */
+"dashboard.title" = "Switchboard";
+"dashboard.empty" = "実行中のClaude Codeセッションはありません";
+"dashboard.active_count" = "アクティブ %lld / 合計 %lld";
+"popover.open_dashboard" = "ダッシュボードを開く";
+"dashboard.search" = "セッションを検索...";
+"dashboard.history" = "履歴";
+"dashboard.history_clear" = "すべて削除";
+"dashboard.history_empty" = "履歴がありません";
+"dashboard.just_now" = "たった今";
+"dashboard.minutes_ago" = "%lld分前";
+"dashboard.hours_ago" = "%lld時間前";
+"dashboard.days_ago" = "%lld日前";
+
+/* Session Memo */
+"session.memo_placeholder" = "メモを入力...";
+"session.add_memo" = "メモを追加";
+"session.edit_memo" = "メモを編集";
+"session.delete_memo" = "メモを削除";
+
+/* Settings */
+"settings.tab.general" = "一般";
+"settings.tab.notification" = "通知";
+"settings.tab.about" = "情報";
+"settings.refresh" = "更新";
+"settings.poll_interval" = "更新間隔";
+"settings.seconds" = "%lld秒";
+"settings.auto_cleanup" = "終了セッションの整理";
+"settings.cleanup_off" = "使用しない";
+"settings.cleanup_minutes" = "%lld分後";
+"settings.window" = "ウィンドウ";
+"settings.always_on_top" = "常に最前面に表示";
+"settings.system" = "システム";
+"settings.launch_at_login" = "ログイン時に起動";
+
+/* Notification */
+"settings.notification" = "通知";
+"settings.notify_on_complete" = "タスク完了時に通知（サウンド付き）";
+"settings.slack_toggle" = "Slackに通知を送信";
+"settings.slack_url_placeholder" = "Slack受信Webhook URLを貼り付け";
+"settings.slack_help" = "Slackアプリ設定 → 受信Webhookからコピーしてください";
+"settings.discord_toggle" = "Discordに通知を送信";
+"settings.discord_url_placeholder" = "Discord Webhook URLを貼り付け";
+"settings.discord_help" = "サーバー設定 → 連携 → WebhookからURLをコピーしてください";
+"settings.telegram_toggle" = "Telegramに通知を送信";
+"settings.telegram_bot_token" = "ボットトークン（BotFatherから取得）";
+"settings.telegram_chat_id" = "チャットID";
+"settings.telegram_help" = "BotFatherでボットを作成し、トークンとチャットIDを入力してください";
+
+/* Sort */
+"sort.status" = "自動";
+"sort.custom" = "カスタム";
+
+/* Credit */
+"credit.title" = "情報";
+"credit.version %@" = "バージョン %@";
+"credit.description" = "Claude Codeセッションの状態を一目で確認できます。";
+"credit.author" = "Made by kkirk studio";

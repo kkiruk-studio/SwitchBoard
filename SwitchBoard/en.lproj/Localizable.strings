@@ -1,0 +1,72 @@
+/* Status */
+"status.working" = "Working";
+"status.done" = "Done";
+"status.needs_input" = "Input Needed";
+"status.needs_confirm" = "Approval Needed";
+"status.idle" = "Ended";
+
+/* Status descriptions */
+"status.desc.working" = "AI is working on a task";
+"status.desc.done" = "Task completed";
+"status.desc.needs_input" = "Waiting for user input";
+"status.desc.needs_confirm" = "Tool approval needed";
+"status.desc.idle" = "Session ended";
+
+/* Dashboard */
+"dashboard.title" = "Switchboard";
+"dashboard.empty" = "No active Claude Code sessions";
+"dashboard.active_count" = "Active %lld / Total %lld";
+"popover.open_dashboard" = "Open Dashboard";
+"dashboard.search" = "Search sessions...";
+"dashboard.history" = "History";
+"dashboard.history_clear" = "Clear All";
+"dashboard.history_empty" = "No history yet";
+"dashboard.just_now" = "Just now";
+"dashboard.minutes_ago" = "%lld min ago";
+"dashboard.hours_ago" = "%lld hr ago";
+"dashboard.days_ago" = "%lld day ago";
+
+/* Session Memo */
+"session.memo_placeholder" = "Add a note...";
+"session.add_memo" = "Add Memo";
+"session.edit_memo" = "Edit Memo";
+"session.delete_memo" = "Delete Memo";
+
+/* Settings */
+"settings.tab.general" = "General";
+"settings.tab.notification" = "Notifications";
+"settings.tab.about" = "About";
+"settings.refresh" = "Refresh";
+"settings.poll_interval" = "Poll Interval";
+"settings.seconds" = "%lld seconds";
+"settings.auto_cleanup" = "Remove ended sessions";
+"settings.cleanup_off" = "Never";
+"settings.cleanup_minutes" = "After %lld min";
+"settings.window" = "Window";
+"settings.always_on_top" = "Always on Top";
+"settings.system" = "System";
+"settings.launch_at_login" = "Launch at Login";
+
+/* Notification */
+"settings.notification" = "Notifications";
+"settings.notify_on_complete" = "Notify on task complete (with sound)";
+"settings.slack_toggle" = "Send notifications to Slack";
+"settings.slack_url_placeholder" = "Paste Slack Incoming Webhook URL";
+"settings.slack_help" = "Copy the URL from Slack App Settings → Incoming Webhooks";
+"settings.discord_toggle" = "Send notifications to Discord";
+"settings.discord_url_placeholder" = "Paste Discord Webhook URL";
+"settings.discord_help" = "Copy the URL from Server Settings → Integrations → Webhooks";
+"settings.telegram_toggle" = "Send notifications to Telegram";
+"settings.telegram_bot_token" = "Bot Token (from BotFather)";
+"settings.telegram_chat_id" = "Chat ID";
+"settings.telegram_help" = "Create a bot via BotFather, then enter the token and chat ID";
+
+/* Sort */
+"sort.status" = "Auto";
+"sort.custom" = "Custom";
+
+/* Credit */
+"credit.title" = "About";
+"credit.version %@" = "Version %@";
+"credit.description" = "Monitor your Claude Code sessions at a glance.";
+"credit.author" = "Made by kkirk studio";
