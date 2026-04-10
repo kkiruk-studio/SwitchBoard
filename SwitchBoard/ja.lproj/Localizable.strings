@@ -31,6 +31,7 @@
 "session.add_memo" = "メモを追加";
 "session.edit_memo" = "メモを編集";
 "session.delete_memo" = "メモを削除";
+"session.terminate" = "セッションを終了";
 
 /* Settings */
 "settings.tab.general" = "一般";
@@ -43,13 +44,27 @@
 "settings.cleanup_off" = "使用しない";
 "settings.cleanup_minutes" = "%lld分後";
 "settings.window" = "ウィンドウ";
+"settings.menubar_badge" = "メニューバーバッジ";
+"settings.badge.always" = "常に表示";
+"settings.badge.active_only" = "アクティブ時のみ";
+"settings.badge.icon_only" = "アイコンのみ";
 "settings.always_on_top" = "常に最前面に表示";
 "settings.system" = "システム";
 "settings.launch_at_login" = "ログイン時に起動";
 
 /* Notification */
 "settings.notification" = "通知";
-"settings.notify_on_complete" = "タスク完了時に通知（サウンド付き）";
+"settings.notify_on_complete" = "タスク完了時に通知";
+"settings.notification_denied" = "システム設定で通知が無効になっています";
+"settings.open_system_settings" = "設定を開く";
+"settings.notification_sound" = "通知音";
+"settings.sound_default" = "デフォルト";
+"settings.custom_notification_text" = "通知テキストの変更";
+"settings.notify_text_done" = "完了";
+"settings.notify_text_needs_input" = "入力待ち";
+"settings.custom_notification_help" = "空欄の場合はデフォルトのテキストが使用されます";
+"notification.default.done" = "タスク完了";
+"notification.default.needs_input" = "入力を待っています";
 "settings.slack_toggle" = "Slackに通知を送信";
 "settings.slack_url_placeholder" = "Slack受信Webhook URLを貼り付け";
 "settings.slack_help" = "Slackアプリ設定 → 受信Webhookからコピーしてください";
@@ -69,4 +84,6 @@
 "credit.title" = "情報";
 "credit.version %@" = "バージョン %@";
 "credit.description" = "Claude Codeセッションの状態を一目で確認できます。";
+"credit.supported_terminals" = "対応ターミナル:";
 "credit.author" = "Made by kkirk studio";
+"settings.check_for_updates" = "アップデートを確認";

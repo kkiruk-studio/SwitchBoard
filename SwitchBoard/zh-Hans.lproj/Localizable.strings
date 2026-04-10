@@ -31,6 +31,7 @@
 "session.add_memo" = "添加备注";
 "session.edit_memo" = "编辑备注";
 "session.delete_memo" = "删除备注";
+"session.terminate" = "终止会话";
 
 /* Settings */
 "settings.tab.general" = "通用";
@@ -43,13 +44,27 @@
 "settings.cleanup_off" = "不使用";
 "settings.cleanup_minutes" = "%lld分钟后";
 "settings.window" = "窗口";
+"settings.menubar_badge" = "菜单栏徽标";
+"settings.badge.always" = "始终显示";
+"settings.badge.active_only" = "仅活跃时";
+"settings.badge.icon_only" = "仅图标";
 "settings.always_on_top" = "始终置顶";
 "settings.system" = "系统";
 "settings.launch_at_login" = "登录时启动";
 
 /* Notification */
 "settings.notification" = "通知";
-"settings.notify_on_complete" = "任务完成时通知（含提示音）";
+"settings.notify_on_complete" = "任务完成时通知";
+"settings.notification_denied" = "系统设置中通知已关闭";
+"settings.open_system_settings" = "打开设置";
+"settings.notification_sound" = "提示音";
+"settings.sound_default" = "默认";
+"settings.custom_notification_text" = "自定义通知文本";
+"settings.notify_text_done" = "完成";
+"settings.notify_text_needs_input" = "等待输入";
+"settings.custom_notification_help" = "留空则使用默认文本";
+"notification.default.done" = "任务完成";
+"notification.default.needs_input" = "等待您的输入";
 "settings.slack_toggle" = "发送通知到 Slack";
 "settings.slack_url_placeholder" = "粘贴 Slack 传入 Webhook URL";
 "settings.slack_help" = "从 Slack 应用设置 → 传入 Webhook 复制 URL";
@@ -69,4 +84,6 @@
 "credit.title" = "关于";
 "credit.version %@" = "版本 %@";
 "credit.description" = "一目了然地监控Claude Code会话状态。";
+"credit.supported_terminals" = "支持的终端:";
 "credit.author" = "Made by kkirk studio";
+"settings.check_for_updates" = "检查更新";

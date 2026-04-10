@@ -31,6 +31,7 @@
 "session.add_memo" = "메모 추가";
 "session.edit_memo" = "메모 편집";
 "session.delete_memo" = "메모 삭제";
+"session.terminate" = "세션 종료";
 
 /* Settings */
 "settings.tab.general" = "일반";
@@ -43,13 +44,27 @@
 "settings.cleanup_off" = "사용 안 함";
 "settings.cleanup_minutes" = "%lld분 후";
 "settings.window" = "윈도우";
+"settings.menubar_badge" = "메뉴바 배지";
+"settings.badge.always" = "항상 표시";
+"settings.badge.active_only" = "활성 세션만";
+"settings.badge.icon_only" = "아이콘만";
 "settings.always_on_top" = "항상 위에 표시";
 "settings.system" = "시스템";
 "settings.launch_at_login" = "로그인 시 자동 실행";
 
 /* Notification */
 "settings.notification" = "알림";
-"settings.notify_on_complete" = "작업 완료 시 알림 (소리 포함)";
+"settings.notify_on_complete" = "작업 완료 시 알림";
+"settings.notification_denied" = "시스템 설정에서 알림이 꺼져 있습니다";
+"settings.open_system_settings" = "설정 열기";
+"settings.notification_sound" = "알림음";
+"settings.sound_default" = "기본";
+"settings.custom_notification_text" = "알림 문구 변경";
+"settings.notify_text_done" = "작업 완료";
+"settings.notify_text_needs_input" = "입력 대기";
+"settings.custom_notification_help" = "비워두면 기본 문구가 사용됩니다";
+"notification.default.done" = "작업 완료";
+"notification.default.needs_input" = "입력 대기";
 "settings.slack_toggle" = "Slack으로 알림 보내기";
 "settings.slack_url_placeholder" = "Slack 수신 웹훅 URL 붙여넣기";
 "settings.slack_help" = "Slack 앱 설정 → 수신 웹훅에서 URL을 복사하세요";
@@ -69,4 +84,6 @@
 "credit.title" = "정보";
 "credit.version %@" = "버전 %@";
 "credit.description" = "Claude Code 세션 상태를 한눈에 확인하세요.";
+"credit.supported_terminals" = "지원 터미널:";
 "credit.author" = "Made by kkirk studio";
+"settings.check_for_updates" = "업데이트 확인";

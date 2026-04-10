@@ -31,6 +31,7 @@
 "session.add_memo" = "Add Memo";
 "session.edit_memo" = "Edit Memo";
 "session.delete_memo" = "Delete Memo";
+"session.terminate" = "Terminate Session";
 
 /* Settings */
 "settings.tab.general" = "General";
@@ -43,13 +44,27 @@
 "settings.cleanup_off" = "Never";
 "settings.cleanup_minutes" = "After %lld min";
 "settings.window" = "Window";
+"settings.menubar_badge" = "Menu Bar Badge";
+"settings.badge.always" = "Always";
+"settings.badge.active_only" = "Active Only";
+"settings.badge.icon_only" = "Icon Only";
 "settings.always_on_top" = "Always on Top";
 "settings.system" = "System";
 "settings.launch_at_login" = "Launch at Login";
 
 /* Notification */
 "settings.notification" = "Notifications";
-"settings.notify_on_complete" = "Notify on task complete (with sound)";
+"settings.notify_on_complete" = "Notify on task complete";
+"settings.notification_denied" = "Notifications are disabled in System Settings";
+"settings.open_system_settings" = "Open Settings";
+"settings.notification_sound" = "Alert Sound";
+"settings.sound_default" = "Default";
+"settings.custom_notification_text" = "Custom Notification Text";
+"settings.notify_text_done" = "Done";
+"settings.notify_text_needs_input" = "Input";
+"settings.custom_notification_help" = "Leave empty to use default text";
+"notification.default.done" = "Task Complete";
+"notification.default.needs_input" = "Waiting for your input";
 "settings.slack_toggle" = "Send notifications to Slack";
 "settings.slack_url_placeholder" = "Paste Slack Incoming Webhook URL";
 "settings.slack_help" = "Copy the URL from Slack App Settings → Incoming Webhooks";
@@ -69,4 +84,6 @@
 "credit.title" = "About";
 "credit.version %@" = "Version %@";
 "credit.description" = "Monitor your Claude Code sessions at a glance.";
+"credit.supported_terminals" = "Supported Terminals:";
 "credit.author" = "Made by kkirk studio";
+"settings.check_for_updates" = "Check for Updates";

@@ -17,6 +17,9 @@ final class SessionManager: ObservableObject {
 
     @AppStorage("sortMode") var sortMode = "status"  // "status" or "custom"
     @AppStorage("notifyOnComplete") var notifyOnComplete = true
+    @AppStorage("notificationSound") var notificationSound = "default"
+    @AppStorage("notifyTextDone") var notifyTextDone = ""
+    @AppStorage("notifyTextNeedsInput") var notifyTextNeedsInput = ""
     @AppStorage("slackWebhookURL") var slackWebhookURL = ""
     @AppStorage("slackEnabled") var slackEnabled = false
     @AppStorage("discordWebhookURL") var discordWebhookURL = ""
@@ -25,11 +28,14 @@ final class SessionManager: ObservableObject {
     @AppStorage("telegramChatId") var telegramChatId = ""
     @AppStorage("telegramEnabled") var telegramEnabled = false
     @Published var sessions: [Session] = []
-    @Published var isConnected = true
     private var customOrder: [String] = [] // 사용자 정렬 순서 (PID 목록)
     private var previousStatuses: [String: SessionStatus] = [:] // 이전 상태 추적
+    private var notifiedSessions: Set<String> = [] // 알림 중복 방지
+    private var workingCount: [String: Int] = [:] // working 연속 횟수
+    private var previousWorkingCount: [String: Int] = [:] // 직전 폴링까지의 working 횟수
     private var tokenAccumulator: [String: (input: Int, output: Int)] = [:] // 세션별 누적 토큰
     private var lastReadOffset: [String: UInt64] = [:] // 세션별 마지막 읽은 위치
+    private var ttyCache: [Int: String] = [:] // PID별 TTY 캐시 (프로세스 재실행 전까지 불변)
 
     private var timer: AnyCancellable?
     private let homeDir = FileManager.default.homeDirectoryForCurrentUser
@@ -40,8 +46,19 @@ final class SessionManager: ObservableObject {
         homeDir.appendingPathComponent(".claude/projects")
     }
 
+    @Published var notificationPermissionDenied = false
+
     func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
+        checkNotificationPermission()
+    }
+
+    func checkNotificationPermission() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            Task { @MainActor in
+                self.notificationPermissionDenied = settings.authorizationStatus == .denied
+            }
+        }
     }
 
     func startPolling() {
@@ -73,6 +90,7 @@ final class SessionManager: ObservableObject {
         }
 
         var result: [Session] = []
+        var currentSessionIds = Set<String>()
 
         for file in files {
             guard let data = try? Data(contentsOf: file),
@@ -90,8 +108,19 @@ final class SessionManager: ObservableObject {
             }
 
             let statusText = statusDescription(status: status)
-            let tty = alive ? getTTY(pid: info.pid) : ""
+            let tty: String
+            if alive {
+                if let cached = ttyCache[info.pid] {
+                    tty = cached
+                } else {
+                    tty = getTTY(pid: info.pid)
+                    if !tty.isEmpty { ttyCache[info.pid] = tty }
+                }
+            } else {
+                tty = ""
+            }
             let tokens = readTokenUsage(sessionId: info.sessionId)
+            currentSessionIds.insert(info.sessionId)
 
             result.append(Session(
                 id: "\(info.pid)",
@@ -125,21 +154,49 @@ final class SessionManager: ObservableObject {
         }
         // 상태 전환 감지 → 히스토리 기록 + 알림
         for session in result {
-            if let prev = previousStatuses[session.id], prev != session.status {
+            let prev = previousStatuses[session.id]
+            if session.status == .working {
+                workingCount[session.id, default: 0] += 1
+            } else {
+                workingCount[session.id] = 0
+            }
+            // idle → working 전환 시에만 알림 이력 리셋 (새 작업 시작)
+            if prev == .idle && session.status == .working {
+                notifiedSessions.remove(session.id)
+            }
+            if let prev = prev, prev != session.status {
                 StatusHistory.shared.record(
                     sessionId: session.id,
                     sessionName: session.name,
                     from: prev,
                     to: session.status
                 )
-                if notifyOnComplete && prev == .working &&
-                    (session.status == .done || session.status == .needs_input || session.status == .needs_confirm) {
+                // working이 3회 이상 연속 감지된 후 완료 전환 시에만 알림 (순간적 오감지 무시)
+                let wasReallyWorking = workingCount[session.id, default: 0] == 0 &&
+                    (previousWorkingCount[session.id, default: 0] >= 3)
+                if notifyOnComplete &&
+                    (prev == .working) &&
+                    (session.status == .done || session.status == .needs_input) &&
+                    wasReallyWorking &&
+                    !notifiedSessions.contains(session.id) {
+                    notifiedSessions.insert(session.id)
                     sendCompletionNotification(session: session)
                 }
             }
+            previousWorkingCount[session.id] = workingCount[session.id, default: 0]
         }
         previousStatuses = Dictionary(uniqueKeysWithValues: result.map { ($0.id, $0.status) })
 
+        // 사라진 세션의 캐시 정리 (메모리 누수 방지)
+        let currentIds = Set(result.map { $0.id })
+        let currentPids = Set(result.map { $0.pid })
+        notifiedSessions = notifiedSessions.intersection(currentIds)
+        workingCount = workingCount.filter { currentIds.contains($0.key) }
+        previousWorkingCount = previousWorkingCount.filter { currentIds.contains($0.key) }
+        previousStatuses = previousStatuses.filter { currentIds.contains($0.key) }
+        tokenAccumulator = tokenAccumulator.filter { currentSessionIds.contains($0.key) }
+        lastReadOffset = lastReadOffset.filter { currentSessionIds.contains($0.key) }
+        ttyCache = ttyCache.filter { currentPids.contains($0.key) }
 
         sessions = result
     }
@@ -148,8 +205,27 @@ final class SessionManager: ObservableObject {
         // macOS 로컬 알림
         let content = UNMutableNotificationContent()
         content.title = session.name
-        content.body = session.task
-        content.sound = .default
+        let defaultText: String
+        switch session.status {
+        case .done:
+            defaultText = NSLocalizedString("notification.default.done", comment: "")
+        case .needs_input:
+            defaultText = NSLocalizedString("notification.default.needs_input", comment: "")
+        default:
+            defaultText = session.status.label
+        }
+        content.body = {
+            switch session.status {
+            case .done: return notifyTextDone.isEmpty ? defaultText : notifyTextDone
+            case .needs_input: return notifyTextNeedsInput.isEmpty ? defaultText : notifyTextNeedsInput
+            default: return defaultText
+            }
+        }()
+        if notificationSound == "default" {
+            content.sound = .default
+        } else {
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("\(notificationSound).aiff"))
+        }
         let request = UNNotificationRequest(
             identifier: "session-\(session.id)-\(Date().timeIntervalSince1970)",
             content: content,
@@ -198,37 +274,63 @@ final class SessionManager: ObservableObject {
     }
 
     private func detectStatus(pid: Int, sessionId: String, cwd: String) -> SessionStatus {
-        // 1) JSONL에서 마지막 메시지 타입 확인
-        let lastMessage = readLastMessages(sessionId: sessionId, cwd: cwd)
+        // 1) JSONL 파일 수정시간 확인
+        var jsonlAge: TimeInterval = .infinity
+        if let jsonlPath = findJsonlFile(sessionId: sessionId),
+           let attrs = try? FileManager.default.attributesOfItem(atPath: jsonlPath.path),
+           let modDate = attrs[.modificationDate] as? Date {
+            jsonlAge = Date().timeIntervalSince(modDate)
+            if jsonlAge < pollInterval + 3 {
+                return .working
+            }
+        }
 
-        // 2) CPU 사용량 확인
-        let cpuUsage = getCPUUsage(pid: pid)
-
-        // CPU가 높으면 작업 중
-        if cpuUsage > 10 {
+        // 2) CPU 체크는 파일이 최근(30초 이내)이면서 working 의심될 때만
+        // (오래 조용한 세션은 CPU 체크 스킵 → Process spawn 비용 절약)
+        if jsonlAge < 30, getCPUUsage(pid: pid) > 5 {
             return .working
         }
 
-        // JSONL 기반 판단
+        // 3) JSONL 마지막 메시지로 최종 상태 판단
+        let lastMessage = readLastMessages(sessionId: sessionId, cwd: cwd)
         switch lastMessage {
-        case .toolUse:
-            return .needs_confirm  // 도구 승인 대기
-        case .assistantText:
-            return .needs_input    // 응답 완료, 사용자 입력 대기
+        case .progress, .toolUse, .userMessage:
+            return .working
+        case .assistantText(let text):
+            return looksLikeWaitingForInput(text) ? .needs_input : .done
         case .turnEnd:
-            return .done           // 턴 완료
-        case .userMessage:
-            return .working        // 사용자 메시지 후 처리 중
+            return .done
         case .unknown:
-            return .needs_input
+            return .done
         }
     }
 
+    private func looksLikeWaitingForInput(_ text: String) -> Bool {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        // 물음표로 끝나면 입력 대기
+        if trimmed.hasSuffix("?") || trimmed.hasSuffix("？") { return true }
+        // 번호 옵션 패턴 (1. 또는 1) 등)
+        let lines = trimmed.components(separatedBy: "\n").suffix(6)
+        var numberedCount = 0
+        for line in lines {
+            let l = line.trimmingCharacters(in: .whitespaces)
+            let range = NSRange(l.startIndex..., in: l)
+            if Self.numberedOptionRegex.firstMatch(in: l, range: range) != nil {
+                numberedCount += 1
+            }
+        }
+        if numberedCount >= 2 { return true }
+        return false
+    }
+
+    private static let numberedOptionRegex = try! NSRegularExpression(pattern: #"^\d+[\.\)]\s"#)
+
     private enum LastMessageType {
-        case assistantText
+        case assistantText(String) // 마지막 텍스트 내용
         case toolUse
         case turnEnd
         case userMessage
+        case progress  // 작업 진행 중
         case unknown
     }
 
@@ -263,23 +365,36 @@ final class SessionManager: ObservableObject {
 
             if type == "assistant" {
                 if let message = json["message"] as? [String: Any],
-                   let content = message["content"] as? [[String: Any]],
-                   let lastBlock = content.last,
-                   let blockType = lastBlock["type"] as? String {
-                    if blockType == "tool_use" {
+                   let content = message["content"] as? [[String: Any]] {
+                    // 마지막 블록이 tool_use인지 확인
+                    if let lastBlock = content.last,
+                       let blockType = lastBlock["type"] as? String,
+                       blockType == "tool_use" {
                         return .toolUse
                     }
-                    return .assistantText
+                    // 모든 텍스트 블록을 합쳐서 반환
+                    let fullText = content.compactMap { block -> String? in
+                        if block["type"] as? String == "text" {
+                            return block["text"] as? String
+                        }
+                        return nil
+                    }.joined(separator: "\n")
+                    return .assistantText(fullText)
                 }
-                return .assistantText
+                return .assistantText("")
             }
 
             if type == "user" {
                 return .userMessage
             }
 
-            // progress, file-history-snapshot 등은 건너뜀
-            if type == "progress" || type == "file-history-snapshot" {
+            // progress = 확실히 작업 중
+            if type == "progress" {
+                return .progress
+            }
+
+            // file-history-snapshot 등은 건너뜀
+            if type == "file-history-snapshot" {
                 continue
             }
         }
@@ -352,6 +467,12 @@ final class SessionManager: ObservableObject {
         return ""
     }
 
+    func terminateSession(_ session: Session) {
+        guard session.status != .idle else { return }
+        kill(pid_t(session.pid), SIGTERM)
+        // 다음 폴링에서 상태 반영됨
+    }
+
     func focusTerminal(session: Session) {
         guard !session.tty.isEmpty else { return }
 
@@ -377,10 +498,24 @@ final class SessionManager: ObservableObject {
             end tell
             """)
         case "Warp":
-            // Warp는 AppleScript 미지원 — 앱 활성화만
             runAppleScript("""
             tell application "Warp" to activate
             """)
+        case "VS Code":
+            runAppleScript("""
+            tell application "Visual Studio Code" to activate
+            """)
+        case "Cursor":
+            runAppleScript("""
+            tell application "Cursor" to activate
+            """)
+        case "JetBrains":
+            // JetBrains IDE는 번들 이름이 다양하므로 프로세스 이름으로 활성화
+            if let appName = detectJetBrainsAppName(pid: session.pid) {
+                runAppleScript("""
+                tell application "\(appName)" to activate
+                """)
+            }
         default:
             runAppleScript("""
             tell application "Terminal"
@@ -403,16 +538,44 @@ final class SessionManager: ObservableObject {
     private func detectTerminalApp(pid: Int) -> String {
         // pid → ppid → ppid ... 최상위 앱 이름 찾기
         var currentPid = pid
-        for _ in 0..<5 {
+        for _ in 0..<10 {
             let ppid = getParentPid(currentPid)
             if ppid <= 1 { break }
             let name = getProcessName(ppid)
             if name.contains("iTerm") { return "iTerm2" }
             if name.contains("Warp") { return "Warp" }
+            if name.contains("Cursor") { return "Cursor" }
+            if name.contains("Electron") || name.contains("Code") { return "VS Code" }
+            if name.contains("idea") || name.contains("webstorm") || name.contains("pycharm") ||
+               name.contains("goland") || name.contains("rider") || name.contains("clion") ||
+               name.contains("phpstorm") || name.contains("rubymine") || name.contains("datagrip") {
+                return "JetBrains"
+            }
             if name.contains("Terminal") { return "Terminal" }
             currentPid = ppid
         }
         return "Terminal"
+    }
+
+    private func detectJetBrainsAppName(pid: Int) -> String? {
+        var currentPid = pid
+        for _ in 0..<10 {
+            let ppid = getParentPid(currentPid)
+            if ppid <= 1 { break }
+            let name = getProcessName(ppid).lowercased()
+            let mapping: [(String, String)] = [
+                ("idea", "IntelliJ IDEA"), ("webstorm", "WebStorm"),
+                ("pycharm", "PyCharm"), ("goland", "GoLand"),
+                ("rider", "Rider"), ("clion", "CLion"),
+                ("phpstorm", "PhpStorm"), ("rubymine", "RubyMine"),
+                ("datagrip", "DataGrip"),
+            ]
+            for (key, appName) in mapping {
+                if name.contains(key) { return appName }
+            }
+            currentPid = ppid
+        }
+        return nil
     }
 
     private func getParentPid(_ pid: Int) -> Int {
@@ -505,7 +668,6 @@ final class SessionManager: ObservableObject {
         switch status {
         case .working: return NSLocalizedString("status.desc.working", comment: "")
         case .needs_input: return NSLocalizedString("status.desc.needs_input", comment: "")
-        case .needs_confirm: return NSLocalizedString("status.desc.needs_confirm", comment: "")
         case .done: return NSLocalizedString("status.desc.done", comment: "")
         case .idle: return NSLocalizedString("status.desc.idle", comment: "")
         }
@@ -516,7 +678,7 @@ final class SessionManager: ObservableObject {
     }
 
     var hasNeedsInput: Bool {
-        sessions.contains { $0.status == .needs_input || $0.status == .needs_confirm }
+        sessions.contains { $0.status == .needs_input }
     }
 
     var hasWorking: Bool {

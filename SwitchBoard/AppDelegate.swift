@@ -13,12 +13,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     private var hotKeyRef: EventHotKeyRef?
     @AppStorage("alwaysOnTop") private var alwaysOnTop = false
 
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return false
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            for window in sender.windows where window.title == "Switchboard" {
+                window.makeKeyAndOrderFront(nil)
+            }
+        }
+        return true
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().delegate = self
 
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "square.grid.2x2", accessibilityDescription: "SwitchBoard")
+            let sizeConfig = NSImage.SymbolConfiguration(pointSize: 13, weight: .medium)
+            let image = NSImage(systemSymbolName: "inset.filled.topleading.rectangle", accessibilityDescription: "SwitchBoard")?.withSymbolConfiguration(sizeConfig)
+            image?.isTemplate = true
+            button.image = image
+            button.imagePosition = .imageLeading
             button.action = #selector(statusItemClicked)
             button.target = self
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
@@ -50,11 +67,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             .sink { [weak self] (_: [Session]) in self?.updateIcon() }
             .store(in: &cancellables)
 
-        sm.$isConnected
-            .receive(on: RunLoop.main)
-            .sink { [weak self] (_: Bool) in self?.updateIcon() }
-            .store(in: &cancellables)
-
         // 초기 적용
         applyAlwaysOnTop()
     }
@@ -64,22 +76,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         window.level = alwaysOnTop ? .floating : .normal
     }
 
-    private func updateIcon() {
-        guard let sm = sessionManager else { return }
-        let symbolName: String
-        if sm.hasNeedsInput {
-            symbolName = "exclamationmark.triangle.fill"
-        } else if sm.hasWorking {
-            symbolName = "circle.dotted"
-        } else if sm.allDoneOrIdle {
-            symbolName = "checkmark.circle"
-        } else {
-            symbolName = "square.grid.2x2"
-        }
+    @AppStorage("menuBarBadge") private var menuBarBadge = "always"
 
-        if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "SwitchBoard")
-            button.contentTintColor = tintColor(sm)
+    private func updateIcon() {
+        guard let sm = sessionManager, let button = statusItem.button else { return }
+        let total = sm.sessions.count
+        let active = sm.sessions.filter { $0.status == .working || $0.status == .needs_input }.count
+
+        switch menuBarBadge {
+        case "always":
+            button.title = total > 0 ? "\(active)/\(total)" : ""
+        case "active":
+            button.title = active > 0 ? "\(active)/\(total)" : ""
+        default:
+            button.title = ""
         }
     }
 
@@ -106,7 +116,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             return
         }
         let pop = NSPopover()
-        pop.contentSize = NSSize(width: 320, height: 400)
+        pop.contentSize = NSSize(width: 260, height: 400)
         pop.behavior = .transient
         pop.contentViewController = NSHostingController(
             rootView: PopoverView(sessionManager: sm, onOpenDashboard: { [weak self] in

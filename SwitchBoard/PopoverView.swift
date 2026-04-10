@@ -61,6 +61,18 @@ struct PopoverView: View {
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
                 Spacer()
+                Button {
+                    if #available(macOS 14, *) {
+                        NSApp.activate()
+                    }
+                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .help("settings.tab.general")
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
@@ -92,7 +104,8 @@ private struct PopoverSessionRow: View {
             Text(session.elapsedTime)
                 .font(.system(.caption2, design: .monospaced))
                 .foregroundStyle(.tertiary)
-                .frame(width: 42, alignment: .trailing)
+                .frame(width: 58, alignment: .trailing)
+                .fixedSize()
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 6)

@@ -1,5 +1,10 @@
 import SwiftUI
 import ServiceManagement
+import UserNotifications
+import Combine
+#if canImport(Sparkle)
+import Sparkle
+#endif
 
 struct PreferencesView: View {
     var body: some View {
@@ -20,7 +25,7 @@ struct PreferencesView: View {
                     Text("settings.tab.about")
                 }
         }
-        .frame(width: 400, height: 340)
+        .frame(width: 450, height: 380)
     }
 }
 
@@ -29,6 +34,7 @@ struct PreferencesView: View {
 private struct GeneralTab: View {
     @AppStorage("pollInterval") private var pollInterval = 3.0
     @AppStorage("alwaysOnTop") private var alwaysOnTop = false
+    @AppStorage("menuBarBadge") private var menuBarBadge = "always"
     @State private var launchAtLogin = false
 
     var body: some View {
@@ -38,6 +44,13 @@ private struct GeneralTab: View {
                 Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 3)).tag(3.0)
                 Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 5)).tag(5.0)
                 Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 10)).tag(10.0)
+            }
+            .pickerStyle(.menu)
+
+            Picker("settings.menubar_badge", selection: $menuBarBadge) {
+                Text("settings.badge.always").tag("always")
+                Text("settings.badge.active_only").tag("active")
+                Text("settings.badge.icon_only").tag("none")
             }
             .pickerStyle(.menu)
 
@@ -70,6 +83,10 @@ private struct GeneralTab: View {
 
 private struct NotificationTab: View {
     @AppStorage("notifyOnComplete") private var notifyOnComplete = true
+    @AppStorage("notificationSound") private var notificationSound = "default"
+    @AppStorage("notifyTextDone") private var notifyTextDone = ""
+    @AppStorage("notifyTextNeedsInput") private var notifyTextNeedsInput = ""
+    @State private var systemNotificationDenied = false
     @AppStorage("slackWebhookURL") private var slackWebhookURL = ""
     @AppStorage("slackEnabled") private var slackEnabled = false
     @AppStorage("discordWebhookURL") private var discordWebhookURL = ""
@@ -82,6 +99,58 @@ private struct NotificationTab: View {
         Form {
             Toggle("settings.notify_on_complete", isOn: $notifyOnComplete)
 
+            if notifyOnComplete && systemNotificationDenied {
+                HStack(spacing: 6) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.caption)
+                    Text("settings.notification_denied")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("settings.open_system_settings") {
+                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings")!)
+                    }
+                    .font(.caption)
+                }
+            }
+
+            Picker("settings.notification_sound", selection: $notificationSound) {
+                Text(NSLocalizedString("settings.sound_default", comment: "")).tag("default")
+                ForEach(NotificationSounds.all, id: \.self) { sound in
+                    Text(sound).tag(sound)
+                }
+            }
+            .pickerStyle(.menu)
+            .disabled(!notifyOnComplete)
+            .onChange(of: notificationSound) { newValue in
+                NotificationSounds.preview(newValue)
+            }
+
+            DisclosureGroup("settings.custom_notification_text") {
+                HStack {
+                    Text("settings.notify_text_done")
+                        .font(.caption)
+                        .frame(width: 80, alignment: .leading)
+                    TextField(NSLocalizedString("notification.default.done", comment: ""), text: $notifyTextDone)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .multilineTextAlignment(.leading)
+                }
+                HStack {
+                    Text("settings.notify_text_needs_input")
+                        .font(.caption)
+                        .frame(width: 80, alignment: .leading)
+                    TextField(NSLocalizedString("notification.default.needs_input", comment: ""), text: $notifyTextNeedsInput)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .multilineTextAlignment(.leading)
+                }
+                Text("settings.custom_notification_help")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .disabled(!notifyOnComplete)
 
             DisclosureGroup("Slack") {
                 Toggle("settings.slack_toggle", isOn: $slackEnabled)
@@ -121,6 +190,16 @@ private struct NotificationTab: View {
             }
         }
         .formStyle(.grouped)
+        .onAppear { checkPermission() }
+        .onChange(of: notifyOnComplete) { _ in checkPermission() }
+    }
+
+    private func checkPermission() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                systemNotificationDenied = settings.authorizationStatus == .denied
+            }
+        }
     }
 }
 
@@ -142,11 +221,70 @@ private struct AboutTab: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+
+            HStack(spacing: 6) {
+                Text("credit.supported_terminals")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Text("Terminal · iTerm2 · Warp · VS Code · Cursor · JetBrains")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+
             Text("credit.author")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+
+            #if canImport(Sparkle)
+            Divider().padding(.horizontal, 40)
+            CheckForUpdatesView()
+            #endif
+
             Spacer()
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+#if canImport(Sparkle)
+private let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+
+struct CheckForUpdatesView: View {
+    @ObservedObject private var checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updaterController.updater)
+
+    var body: some View {
+        Button("settings.check_for_updates") {
+            updaterController.checkForUpdates(nil)
+        }
+        .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
+    }
+}
+
+final class CheckForUpdatesViewModel: ObservableObject {
+    @Published var canCheckForUpdates = false
+    private var cancellable: AnyCancellable?
+
+    init(updater: SPUUpdater) {
+        cancellable = updater.publisher(for: \.canCheckForUpdates)
+            .assign(to: \.canCheckForUpdates, on: self)
+    }
+}
+#endif
+
+// MARK: - 알림 사운드
+
+enum NotificationSounds {
+    static let all = [
+        "Basso", "Blow", "Bottle", "Frog", "Funk",
+        "Glass", "Hero", "Morse", "Ping", "Pop",
+        "Purr", "Sosumi", "Submarine", "Tink"
+    ]
+
+    static func preview(_ name: String) {
+        if name == "default" {
+            NSSound.beep()
+        } else if let sound = NSSound(named: NSSound.Name(name)) {
+            sound.play()
+        }
     }
 }

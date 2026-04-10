@@ -66,13 +66,6 @@ struct Session: Identifiable {
     var inputTokens: Int = 0
     var outputTokens: Int = 0
 
-    var estimatedCost: String {
-        // Sonnet: $3/1M input, $15/1M output
-        let cost = (Double(inputTokens) * 3.0 + Double(outputTokens) * 15.0) / 1_000_000.0
-        if cost < 0.01 { return "" }
-        return String(format: "$%.2f", cost)
-    }
-
     var tokenSummary: String {
         if inputTokens == 0 && outputTokens == 0 { return "" }
         let total = inputTokens + outputTokens
@@ -115,17 +108,15 @@ struct Session: Identifiable {
 enum SessionStatus: String {
     case working
     case needs_input
-    case needs_confirm
     case done
     case idle
 
     var sortOrder: Int {
         switch self {
-        case .needs_confirm: return 0
-        case .needs_input: return 1
-        case .working: return 2
-        case .done: return 3
-        case .idle: return 4
+        case .needs_input: return 0
+        case .working: return 1
+        case .done: return 2
+        case .idle: return 3
         }
     }
 
@@ -138,7 +129,6 @@ enum SessionStatus: String {
         case .working: return "bolt.fill"
         case .done: return "checkmark.circle.fill"
         case .needs_input: return "keyboard"
-        case .needs_confirm: return "hand.raised.fill"
         case .idle: return "moon.fill"
         }
     }
@@ -148,7 +138,6 @@ enum SessionStatus: String {
         case .working: return .blue
         case .done: return .green
         case .needs_input: return .orange
-        case .needs_confirm: return .yellow
         case .idle: return .gray
         }
     }

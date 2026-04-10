@@ -1,15 +1,23 @@
+# macOS
+.DS_Store
+
 # Xcode
 build/
 DerivedData/
-*.xcodeproj/xcuserdata/
-*.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
 xcuserdata/
-*.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcworkspace/xcuserdata/
 
-# macOS
-.DS_Store
-*.swp
-*~
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.resolved
 
-# Dev files
+# CocoaPods
+Pods/
+
+# Personal / local
+CLAUDE.md
 mock_server.py

@@ -1,0 +1,33 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>SwitchBoard</title>
+        <link>https://kkiruk-studio.github.io/SwitchBoard/appcast.xml</link>
+        <description>SwitchBoard updates</description>
+        <language>en</language>
+        <item>
+            <title>Version 1.0.0</title>
+            <pubDate>Fri, 10 Apr 2026 15:40:00 +0900</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>Initial release</h2>
+                <ul>
+                    <li>Real-time Claude Code session monitoring</li>
+                    <li>Grid and list views with drag &amp; drop</li>
+                    <li>Menu bar badge with active session count</li>
+                    <li>Notifications via macOS, Slack, Discord, Telegram</li>
+                    <li>Session terminate via right-click</li>
+                    <li>5 languages supported</li>
+                </ul>
+            ]]></description>
+            <enclosure
+                url="https://github.com/kkiruk-studio/SwitchBoard/releases/download/v1.0.0/SwitchBoard.zip"
+                length="1594697"
+                type="application/octet-stream"
+                sparkle:edSignature="2xZQCf0AGPcxqE6LlQ38+0QHLq3s9kaeFzar+Gk6Ly+PYXwoq6kRCdbD//YHpTxcd5bl5Psw6IChmeyU4UjmAw=="
+            />
+        </item>
+    </channel>
+</rss>

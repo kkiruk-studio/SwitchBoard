@@ -22,7 +22,7 @@ struct DashboardView: View {
 
     private let clockTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private let columns = [
-        GridItem(.adaptive(minimum: 160, maximum: 160), spacing: 10),
+        GridItem(.adaptive(minimum: 150, maximum: .infinity), spacing: 10),
     ]
 
     var body: some View {
@@ -90,7 +90,7 @@ struct DashboardView: View {
                 get: { viewMode },
                 set: { viewMode = $0 }
             )) {
-                Image(systemName: "square.grid.2x2")
+                Image(systemName: "circle.grid.2x2")
                     .tag(ViewMode.grid.rawValue)
                 Image(systemName: "list.bullet")
                     .tag(ViewMode.list.rawValue)
@@ -159,7 +159,7 @@ struct DashboardView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(filteredSessions) { session in
-                    SessionTileView(session: session)
+                    SessionTileView(session: session, onTerminate: { sessionManager.terminateSession(session) })
                         .onTapGesture { sessionManager.focusTerminal(session: session) }
                         .opacity(draggingId == session.id ? 0.4 : 1)
                         .onDrag {
@@ -185,7 +185,7 @@ struct DashboardView: View {
         ScrollView {
             LazyVStack(spacing: 6) {
                 ForEach(filteredSessions) { session in
-                    SessionRowView(session: session)
+                    SessionRowView(session: session, onTerminate: { sessionManager.terminateSession(session) })
                         .onTapGesture { sessionManager.focusTerminal(session: session) }
                         .opacity(draggingId == session.id ? 0.4 : 1)
                         .onDrag {
@@ -245,6 +245,7 @@ struct DashboardView: View {
 
 struct SessionTileView: View {
     let session: Session
+    var onTerminate: (() -> Void)?
     @State private var isEditingMemo = false
     @State private var memoText = ""
 
@@ -266,12 +267,6 @@ struct SessionTileView: View {
                 .font(.system(.subheadline, weight: .bold))
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
-
-            // 상태 설명
-            Text(session.task)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
 
             // 메모
             if isEditingMemo {
@@ -302,7 +297,7 @@ struct SessionTileView: View {
 
             Spacer(minLength: 0)
 
-            // 토큰/비용
+            // 토큰
             if !session.tokenSummary.isEmpty {
                 HStack(spacing: 4) {
                     Image(systemName: "flame")
@@ -311,11 +306,6 @@ struct SessionTileView: View {
                     Text(session.tokenSummary)
                         .font(.system(.caption2, design: .monospaced))
                         .foregroundStyle(.secondary)
-                    if !session.estimatedCost.isEmpty {
-                        Text(session.estimatedCost)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
                     Spacer()
                 }
             }
@@ -346,9 +336,15 @@ struct SessionTileView: View {
                     memoText = ""
                 }
             }
+            if session.status != .idle, let onTerminate {
+                Divider()
+                Button("session.terminate", role: .destructive) {
+                    onTerminate()
+                }
+            }
         }
         .padding(12)
-        .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
+        .frame(maxWidth: .infinity, minHeight: 85, alignment: .topLeading)
         .background(tileBackground)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay(
@@ -367,7 +363,6 @@ struct SessionTileView: View {
             switch session.status {
             case .working: Color.blue.opacity(0.08)
             case .needs_input: Color.orange.opacity(0.08)
-            case .needs_confirm: Color.yellow.opacity(0.08)
             case .done: Color.green.opacity(0.06)
             case .idle: Color.primary.opacity(0.03)
             }
@@ -378,7 +373,6 @@ struct SessionTileView: View {
         switch session.status {
         case .working: return .blue.opacity(0.3)
         case .needs_input: return .orange.opacity(0.3)
-        case .needs_confirm: return .yellow.opacity(0.4)
         case .done: return .green.opacity(0.2)
         case .idle: return .clear
         }
@@ -389,6 +383,7 @@ struct SessionTileView: View {
 
 struct SessionRowView: View {
     let session: Session
+    var onTerminate: (() -> Void)?
     @State private var isEditingMemo = false
     @State private var memoText = ""
 
@@ -467,6 +462,12 @@ struct SessionRowView: View {
                     memoText = ""
                 }
             }
+            if session.status != .idle, let onTerminate {
+                Divider()
+                Button("session.terminate", role: .destructive) {
+                    onTerminate()
+                }
+            }
         }
     }
 }
@@ -540,7 +541,6 @@ struct HistoryView: View {
         case "working": return .blue
         case "done": return .green
         case "needs_input": return .orange
-        case "needs_confirm": return .yellow
         case "idle": return .gray
         default: return .primary
         }

@@ -1,55 +1,102 @@
-# Switchboard
+# SwitchBoard
 
 A macOS menu bar app that monitors your Claude Code sessions at a glance.
 
-If you run multiple Claude Code instances across different terminal tabs, Switchboard shows you what each one is doing — working, waiting for input, or done — in a single dashboard.
+If you run multiple Claude Code instances across different terminal tabs, SwitchBoard shows you what each one is doing — working, waiting for input, or done — in a single dashboard.
+
+![Dashboard](docs/screenshots/Dashboard.png)
+
+<p align="center">
+  <img src="docs/screenshots/Popover.png" width="280" alt="Menu bar popover" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/Settings.png" width="380" alt="Settings" />
+</p>
 
 ## Features
 
-- **Real-time status detection** — Monitors `~/.claude/sessions/` and JSONL transcripts to determine each session's state
+### Session monitoring
+- **Real-time status detection** — Monitors `~/.claude/sessions/` and JSONL transcripts
 - **Status types:**
-  - ⚡ **Working** — AI is actively processing (high CPU)
-  - ✋ **Confirm** — Waiting for tool approval
-  - ⌨️ **Input** — Waiting for your input
+  - ⚡ **Working** — Claude is actively processing
+  - ⌨️ **Needs Input** — Waiting for your input
   - ✅ **Done** — Turn completed
   - 🌙 **Idle** — Session ended
-- **Grid & List views** — Toggle between tile grid and compact list (Finder-style)
+- **Token usage** — Shows input/output token counts per session
+
+### Dashboard
+- **Grid & List views** — Toggle between tile grid and compact list
 - **Drag & drop** — Reorder session tiles to your preference
+- **Search** — Filter sessions by project name or memo (4+ sessions)
+- **Session memos** — Add notes to each session
+- **History timeline** — View status transitions over time
+- **Click to focus** — Jump to the corresponding terminal/IDE window
+- **Terminate sessions** — Kill a session via right-click context menu
+
+### Menu bar
+- **Live badge** — Shows active session count (e.g. `1/4`) next to the icon
+- **Quick popover** — Left-click for compact session list
+- **Dashboard shortcut** — Right-click to open the full dashboard
+- **Global hotkey** — `⌘⇧S` from anywhere to toggle the popover
+
+### Notifications
+- **macOS notifications** — Get notified when sessions complete or need input
+- **Webhooks** — Slack, Discord, Telegram integration
+- **Custom messages** — Override default notification text
+
+### Other
+- **Auto-updates** — Built-in update checker via Sparkle
+- **5 languages** — English, Korean, Japanese, Chinese (Simplified & Traditional)
 - **Always on top** — Optional floating window mode
-- **Menu bar icon** — Changes color based on session states
+- **Launch at login**
 
 ## Requirements
 
-- macOS 13.0+
+- macOS 13.0 (Ventura) or later
 - [Claude Code](https://claude.ai/code) running in one or more terminals
 
 ## Installation
 
+### Download (recommended)
+
+1. Download the latest `SwitchBoard.zip` from the [Releases](https://github.com/kkiruk-studio/SwitchBoard/releases) page
+2. Unzip and move `SwitchBoard.app` to your `/Applications` folder
+3. Launch it
+
+The app is signed with a Developer ID and notarized by Apple, so it should launch without security warnings.
+
 ### Build from source
 
-1. Clone the repo
-   ```
-   git clone https://github.com/kkiruk/SwitchBoard.git
-   ```
-2. Open `SwitchBoard.xcodeproj` in Xcode
-3. Build and run (⌘R)
+```bash
+git clone https://github.com/kkiruk-studio/SwitchBoard.git
+cd SwitchBoard
+open SwitchBoard.xcodeproj
+```
+
+Then build and run in Xcode (⌘R).
 
 ## How it works
 
-Switchboard reads Claude Code's local session files:
+SwitchBoard reads Claude Code's local session files:
 
 1. **`~/.claude/sessions/*.json`** — Discovers active sessions (PID, project path, start time)
 2. **Process status** — Checks if each PID is alive and its CPU usage
-3. **JSONL transcripts** — Reads the last messages to determine if Claude is working, waiting for approval, or finished
+3. **JSONL transcripts** — Reads the last messages to determine status
 
-No server required. No network calls. Everything is local.
+No server required. No network calls (except optional webhooks). Everything is local.
 
 ## Settings
 
 - **Poll interval** — 2s / 3s / 5s / 10s
+- **Menu bar badge** — Always / Active only / Icon only
 - **Always on top** — Keep the window above all others
 - **Launch at login** — Start automatically when you log in
+- **Notifications** — Enable/disable, custom messages, sound selection
+- **Webhooks** — Slack / Discord / Telegram
 
 ## License
 
 MIT
+
+---
+
+Made by [kkirk studio](https://github.com/kkiruk-studio)
