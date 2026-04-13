@@ -54,10 +54,12 @@
 
 /* Notification */
 "settings.notification" = "알림";
-"settings.notify_on_complete" = "작업 완료 시 알림";
+"settings.notify_on_complete" = "macOS 알림";
 "settings.notification_denied" = "시스템 설정에서 알림이 꺼져 있습니다";
 "settings.open_system_settings" = "설정 열기";
 "settings.notification_sound" = "알림음";
+"settings.sound_done" = "완료 알림음";
+"settings.sound_needs_input" = "입력 대기 알림음";
 "settings.sound_default" = "기본";
 "settings.custom_notification_text" = "알림 문구 변경";
 "settings.notify_text_done" = "작업 완료";
@@ -74,6 +76,7 @@
 "settings.telegram_toggle" = "Telegram으로 알림 보내기";
 "settings.telegram_bot_token" = "봇 토큰 (BotFather에서 발급)";
 "settings.telegram_chat_id" = "채팅 ID";
+"settings.custom_sound_help" = "나만의 알림음: ~/Library/Sounds/ 에 .aiff 파일을 넣으면 자동으로 목록에 나타납니다";
 "settings.telegram_help" = "① @BotFather에게 /newbot 전송 → 봇 토큰 복사\n② @userinfobot에게 아무 메시지 전송 → Chat ID 확인\n③ 만든 봇에게 아무 메시지를 한 번 보내야 알림이 작동합니다";
 
 /* Sort */

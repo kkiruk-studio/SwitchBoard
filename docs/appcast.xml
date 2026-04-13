@@ -6,6 +6,31 @@
         <description>SwitchBoard updates</description>
         <language>en</language>
         <item>
+            <title>Version 1.1.0</title>
+            <pubDate>Sun, 13 Apr 2026 14:30:00 +0900</pubDate>
+            <sparkle:version>4</sparkle:version>
+            <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>New Features</h2>
+                <ul>
+                    <li>Separate notification sounds for Done and Needs Input</li>
+                    <li>8 fun built-in notification sounds (Finish!, Ding Dong, Magnificent, Brilliant, Hey Hey Hey, Excuse Me Human, Attention Please, Eora?!)</li>
+                    <li>Custom sound support — drop .aiff files into ~/Library/Sounds/</li>
+                    <li>macOS notifications and webhooks now work independently</li>
+                    <li>Improved settings layout with grouped sections</li>
+                    <li>Input field labels for webhook settings (Webhook URL, Bot Token, Chat ID)</li>
+                    <li>Improved webhook setup guides</li>
+                </ul>
+            ]]></description>
+            <enclosure
+                url="https://github.com/kkiruk-studio/SwitchBoard/releases/download/v1.1.0/SwitchBoard.zip"
+                length="1967792"
+                type="application/octet-stream"
+                sparkle:edSignature="anUnOVt04PbetRRqqUmtQV8Vsi6fRcjFOG0bMbRxn4GCXOxE4GCs8Ibug16smMDwb9AzNTdPUsMSWhqSj2M8AQ=="
+            />
+        </item>
+        <item>
             <title>Version 1.0.2</title>
             <pubDate>Sun, 13 Apr 2026 11:13:00 +0900</pubDate>
             <sparkle:version>3</sparkle:version>

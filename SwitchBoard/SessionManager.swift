@@ -18,6 +18,7 @@ final class SessionManager: ObservableObject {
     @AppStorage("sortMode") var sortMode = "status"  // "status" or "custom"
     @AppStorage("notifyOnComplete") var notifyOnComplete = true
     @AppStorage("notificationSound") var notificationSound = "default"
+    @AppStorage("notificationSoundNeedsInput") var notificationSoundNeedsInput = "default"
     @AppStorage("notifyTextDone") var notifyTextDone = ""
     @AppStorage("notifyTextNeedsInput") var notifyTextNeedsInput = ""
     @AppStorage("slackWebhookURL") var slackWebhookURL = ""
@@ -174,8 +175,7 @@ final class SessionManager: ObservableObject {
                 // working이 3회 이상 연속 감지된 후 완료 전환 시에만 알림 (순간적 오감지 무시)
                 let wasReallyWorking = workingCount[session.id, default: 0] == 0 &&
                     (previousWorkingCount[session.id, default: 0] >= 3)
-                if notifyOnComplete &&
-                    (prev == .working) &&
+                if (prev == .working) &&
                     (session.status == .done || session.status == .needs_input) &&
                     wasReallyWorking &&
                     !notifiedSessions.contains(session.id) {
@@ -202,9 +202,7 @@ final class SessionManager: ObservableObject {
     }
 
     private func sendCompletionNotification(session: Session) {
-        // macOS 로컬 알림
-        let content = UNMutableNotificationContent()
-        content.title = session.name
+        // 알림 문구 생성 (macOS + 웹훅 공용)
         let defaultText: String
         switch session.status {
         case .done:
@@ -214,27 +212,35 @@ final class SessionManager: ObservableObject {
         default:
             defaultText = session.status.label
         }
-        content.body = {
+        let bodyText: String = {
             switch session.status {
             case .done: return notifyTextDone.isEmpty ? defaultText : notifyTextDone
             case .needs_input: return notifyTextNeedsInput.isEmpty ? defaultText : notifyTextNeedsInput
             default: return defaultText
             }
         }()
-        if notificationSound == "default" {
-            content.sound = .default
-        } else {
-            content.sound = UNNotificationSound(named: UNNotificationSoundName("\(notificationSound).aiff"))
+
+        // macOS 로컬 알림
+        if notifyOnComplete {
+            let content = UNMutableNotificationContent()
+            content.title = session.name
+            content.body = bodyText
+            let soundName = session.status == .needs_input ? notificationSoundNeedsInput : notificationSound
+            if soundName == "default" {
+                content.sound = .default
+            } else {
+                content.sound = UNNotificationSound(named: UNNotificationSoundName("\(soundName).aiff"))
+            }
+            let request = UNNotificationRequest(
+                identifier: "session-\(session.id)-\(Date().timeIntervalSince1970)",
+                content: content,
+                trigger: nil
+            )
+            UNUserNotificationCenter.current().add(request)
         }
-        let request = UNNotificationRequest(
-            identifier: "session-\(session.id)-\(Date().timeIntervalSince1970)",
-            content: content,
-            trigger: nil
-        )
-        UNUserNotificationCenter.current().add(request)
 
         // 웹훅 알림
-        let webhookMessage = "[\(session.name)] \(content.body)"
+        let webhookMessage = "[\(session.name)] \(bodyText)"
         if slackEnabled { sendSlackWebhook(message: webhookMessage) }
         if discordEnabled { sendDiscordWebhook(message: webhookMessage) }
         if telegramEnabled { sendTelegramMessage(message: webhookMessage) }

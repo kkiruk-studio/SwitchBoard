@@ -18,6 +18,14 @@
 		A1000008 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000008 /* Assets.xcassets */; };
 		A1000009 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A200000B /* Localizable.strings */; };
 		A100000A /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000A /* PopoverView.swift */; };
+		A100000B /* SB_finish.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D1 /* SB_finish.aiff */; };
+		A100000C /* SB_dingdong.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D2 /* SB_dingdong.aiff */; };
+		A100000D /* SB_magnificent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D3 /* SB_magnificent.aiff */; };
+		A100000E /* SB_brilliant.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D4 /* SB_brilliant.aiff */; };
+		A100000F /* SB_heyhey.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D5 /* SB_heyhey.aiff */; };
+		A1000010 /* SB_excuseme.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D6 /* SB_excuseme.aiff */; };
+		A1000011 /* SB_eora.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D7 /* SB_eora.aiff */; };
+		A1000012 /* SB_attention.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D8 /* SB_attention.aiff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +39,14 @@
 		A2000008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A200000A /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
+		A200000D1 /* SB_finish.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_finish.aiff; sourceTree = "<group>"; };
+		A200000D2 /* SB_dingdong.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_dingdong.aiff; sourceTree = "<group>"; };
+		A200000D3 /* SB_magnificent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_magnificent.aiff; sourceTree = "<group>"; };
+		A200000D4 /* SB_brilliant.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_brilliant.aiff; sourceTree = "<group>"; };
+		A200000D5 /* SB_heyhey.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_heyhey.aiff; sourceTree = "<group>"; };
+		A200000D6 /* SB_excuseme.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_excuseme.aiff; sourceTree = "<group>"; };
+		A200000D7 /* SB_eora.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_eora.aiff; sourceTree = "<group>"; };
+		A200000D8 /* SB_attention.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = SB_attention.aiff; sourceTree = "<group>"; };
 		A200000C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A200000D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A200000E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -70,6 +86,14 @@
 				A2000006 /* DashboardView.swift */,
 				A2000007 /* PreferencesView.swift */,
 				A200000A /* PopoverView.swift */,
+				A200000D1 /* SB_finish.aiff */,
+				A200000D2 /* SB_dingdong.aiff */,
+				A200000D3 /* SB_magnificent.aiff */,
+				A200000D4 /* SB_brilliant.aiff */,
+				A200000D5 /* SB_heyhey.aiff */,
+				A200000D6 /* SB_excuseme.aiff */,
+				A200000D7 /* SB_eora.aiff */,
+				A200000D8 /* SB_attention.aiff */,
 				A2000008 /* Assets.xcassets */,
 				A2000009 /* Info.plist */,
 				A200000B /* Localizable.strings */,
@@ -152,6 +176,14 @@
 			files = (
 				A1000008 /* Assets.xcassets in Resources */,
 				A1000009 /* Localizable.strings in Resources */,
+				A100000B /* SB_finish.aiff in Resources */,
+				A100000C /* SB_dingdong.aiff in Resources */,
+				A100000D /* SB_magnificent.aiff in Resources */,
+				A100000E /* SB_brilliant.aiff in Resources */,
+				A100000F /* SB_heyhey.aiff in Resources */,
+				A1000010 /* SB_excuseme.aiff in Resources */,
+				A1000011 /* SB_eora.aiff in Resources */,
+				A1000012 /* SB_attention.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +283,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = NB6Y67C2PV;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -262,7 +294,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.kkiruk.switchboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -279,7 +311,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = NB6Y67C2PV;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -291,7 +323,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.kkiruk.switchboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

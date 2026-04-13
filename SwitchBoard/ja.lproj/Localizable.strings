@@ -54,10 +54,12 @@
 
 /* Notification */
 "settings.notification" = "通知";
-"settings.notify_on_complete" = "タスク完了時に通知";
+"settings.notify_on_complete" = "macOS 通知";
 "settings.notification_denied" = "システム設定で通知が無効になっています";
 "settings.open_system_settings" = "設定を開く";
 "settings.notification_sound" = "通知音";
+"settings.sound_done" = "完了サウンド";
+"settings.sound_needs_input" = "入力待ちサウンド";
 "settings.sound_default" = "デフォルト";
 "settings.custom_notification_text" = "通知テキストの変更";
 "settings.notify_text_done" = "完了";
@@ -74,6 +76,7 @@
 "settings.telegram_toggle" = "Telegramに通知を送信";
 "settings.telegram_bot_token" = "ボットトークン（BotFatherから取得）";
 "settings.telegram_chat_id" = "チャットID";
+"settings.custom_sound_help" = "カスタムサウンド: ~/Library/Sounds/ に .aiff ファイルを入れると自動的にリストに表示されます";
 "settings.telegram_help" = "① @BotFatherに /newbot を送信 → トークンをコピー\n② @userinfobot にメッセージを送信 → Chat IDを確認\n③ 作成したボットにメッセージを一度送信すると通知が有効になります";
 
 /* Sort */

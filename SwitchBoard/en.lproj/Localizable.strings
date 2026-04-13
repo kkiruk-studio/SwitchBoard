@@ -54,10 +54,12 @@
 
 /* Notification */
 "settings.notification" = "Notifications";
-"settings.notify_on_complete" = "Notify on task complete";
+"settings.notify_on_complete" = "macOS Notifications";
 "settings.notification_denied" = "Notifications are disabled in System Settings";
 "settings.open_system_settings" = "Open Settings";
 "settings.notification_sound" = "Alert Sound";
+"settings.sound_done" = "Done Sound";
+"settings.sound_needs_input" = "Needs Input Sound";
 "settings.sound_default" = "Default";
 "settings.custom_notification_text" = "Custom Notification Text";
 "settings.notify_text_done" = "Done";
@@ -74,6 +76,7 @@
 "settings.telegram_toggle" = "Send notifications to Telegram";
 "settings.telegram_bot_token" = "Bot Token (from BotFather)";
 "settings.telegram_chat_id" = "Chat ID";
+"settings.custom_sound_help" = "Custom sounds: Drop .aiff files into ~/Library/Sounds/ and they'll appear here automatically";
 "settings.telegram_help" = "① Send /newbot to @BotFather → Copy bot token\n② Send any message to @userinfobot → Get your Chat ID\n③ Send any message to your bot once to activate notifications";
 
 /* Sort */

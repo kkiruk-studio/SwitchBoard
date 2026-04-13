@@ -25,7 +25,7 @@ struct PreferencesView: View {
                     Text("settings.tab.about")
                 }
         }
-        .frame(width: 450, height: 380)
+        .frame(width: 480, height: 520)
     }
 }
 
@@ -84,6 +84,7 @@ private struct GeneralTab: View {
 private struct NotificationTab: View {
     @AppStorage("notifyOnComplete") private var notifyOnComplete = true
     @AppStorage("notificationSound") private var notificationSound = "default"
+    @AppStorage("notificationSoundNeedsInput") private var notificationSoundNeedsInput = "default"
     @AppStorage("notifyTextDone") private var notifyTextDone = ""
     @AppStorage("notifyTextNeedsInput") private var notifyTextNeedsInput = ""
     @State private var systemNotificationDenied = false
@@ -97,37 +98,7 @@ private struct NotificationTab: View {
 
     var body: some View {
         Form {
-            Toggle("settings.notify_on_complete", isOn: $notifyOnComplete)
-
-            if notifyOnComplete && systemNotificationDenied {
-                HStack(spacing: 6) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.yellow)
-                        .font(.caption)
-                    Text("settings.notification_denied")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Button("settings.open_system_settings") {
-                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings")!)
-                    }
-                    .font(.caption)
-                }
-            }
-
-            Picker("settings.notification_sound", selection: $notificationSound) {
-                Text(NSLocalizedString("settings.sound_default", comment: "")).tag("default")
-                ForEach(NotificationSounds.all, id: \.self) { sound in
-                    Text(sound).tag(sound)
-                }
-            }
-            .pickerStyle(.menu)
-            .disabled(!notifyOnComplete)
-            .onChange(of: notificationSound) { newValue in
-                NotificationSounds.preview(newValue)
-            }
-
-            DisclosureGroup("settings.custom_notification_text") {
+            Section("settings.custom_notification_text") {
                 HStack {
                     Text("settings.notify_text_done")
                         .font(.caption)
@@ -150,44 +121,89 @@ private struct NotificationTab: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-            .disabled(!notifyOnComplete)
 
-            DisclosureGroup("Slack") {
+            Section("macOS") {
+                Toggle("settings.notify_on_complete", isOn: $notifyOnComplete)
+                if notifyOnComplete && systemNotificationDenied {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.yellow)
+                            .font(.caption)
+                        Text("settings.notification_denied")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("settings.open_system_settings") {
+                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings")!)
+                        }
+                        .font(.caption)
+                    }
+                }
+                SoundPicker(label: "settings.sound_done", selection: $notificationSound)
+                    .disabled(!notifyOnComplete)
+                SoundPicker(label: "settings.sound_needs_input", selection: $notificationSoundNeedsInput)
+                    .disabled(!notifyOnComplete)
+                Text("settings.custom_sound_help")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Slack") {
                 Toggle("settings.slack_toggle", isOn: $slackEnabled)
-                TextField("settings.slack_url_placeholder", text: $slackWebhookURL)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-                    .labelsHidden()
-                    .disabled(!slackEnabled)
+                HStack {
+                    Text("Webhook URL")
+                        .font(.caption)
+                        .frame(width: 80, alignment: .leading)
+                    TextField("settings.slack_url_placeholder", text: $slackWebhookURL)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .labelsHidden()
+                        .disabled(!slackEnabled)
+                }
                 Text("settings.slack_help")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
 
-            DisclosureGroup("Discord") {
+            Section("Discord") {
                 Toggle("settings.discord_toggle", isOn: $discordEnabled)
-                TextField("settings.discord_url_placeholder", text: $discordWebhookURL)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-                    .labelsHidden()
-                    .disabled(!discordEnabled)
+                HStack {
+                    Text("Webhook URL")
+                        .font(.caption)
+                        .frame(width: 80, alignment: .leading)
+                    TextField("settings.discord_url_placeholder", text: $discordWebhookURL)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .labelsHidden()
+                        .disabled(!discordEnabled)
+                }
                 Text("settings.discord_help")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
 
-            DisclosureGroup("Telegram") {
+            Section("Telegram") {
                 Toggle("settings.telegram_toggle", isOn: $telegramEnabled)
-                TextField("settings.telegram_bot_token", text: $telegramBotToken)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-                    .labelsHidden()
-                    .disabled(!telegramEnabled)
-                TextField("settings.telegram_chat_id", text: $telegramChatId)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-                    .labelsHidden()
-                    .disabled(!telegramEnabled)
+                HStack {
+                    Text("Bot Token")
+                        .font(.caption)
+                        .frame(width: 80, alignment: .leading)
+                    TextField("settings.telegram_bot_token", text: $telegramBotToken)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .labelsHidden()
+                        .disabled(!telegramEnabled)
+                }
+                HStack {
+                    Text("Chat ID")
+                        .font(.caption)
+                        .frame(width: 80, alignment: .leading)
+                    TextField("settings.telegram_chat_id", text: $telegramChatId)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .labelsHidden()
+                        .disabled(!telegramEnabled)
+                }
                 Text("settings.telegram_help")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -277,12 +293,82 @@ final class CheckForUpdatesViewModel: ObservableObject {
 
 // MARK: - 알림 사운드
 
+private struct SoundPicker: View {
+    let label: LocalizedStringKey
+    @Binding var selection: String
+
+    var body: some View {
+        Picker(label, selection: $selection) {
+            Text(NSLocalizedString("settings.sound_default", comment: "")).tag("default")
+            Divider()
+            ForEach(NotificationSounds.system, id: \.self) { sound in
+                Text(sound).tag(sound)
+            }
+            if !NotificationSounds.bundled.isEmpty {
+                Divider()
+                ForEach(NotificationSounds.bundled, id: \.self) { sound in
+                    Text("★ \(NotificationSounds.displayName(sound))").tag(sound)
+                }
+            }
+            if !NotificationSounds.custom.isEmpty {
+                Divider()
+                ForEach(NotificationSounds.custom, id: \.self) { sound in
+                    Text("♪ \(sound)").tag(sound)
+                }
+            }
+        }
+        .pickerStyle(.menu)
+        .onChange(of: selection) { newValue in
+            NotificationSounds.preview(newValue)
+        }
+    }
+}
+
 enum NotificationSounds {
-    static let all = [
+    static let system = [
         "Basso", "Blow", "Bottle", "Frog", "Funk",
         "Glass", "Hero", "Morse", "Ping", "Pop",
         "Purr", "Sosumi", "Submarine", "Tink"
     ]
+
+    static let bundled = [
+        "SB_finish", "SB_dingdong", "SB_magnificent", "SB_brilliant",
+        "SB_heyhey", "SB_excuseme", "SB_attention", "SB_eora"
+    ]
+
+    static var custom: [String] {
+        let soundsDir = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Sounds")
+        guard let files = try? FileManager.default.contentsOfDirectory(
+            at: soundsDir, includingPropertiesForKeys: nil
+        ) else { return [] }
+        return files
+            .filter { ["aiff", "wav", "caf", "mp3", "m4a"].contains($0.pathExtension.lowercased()) }
+            .map { $0.deletingPathExtension().lastPathComponent }
+            .sorted()
+    }
+
+    static var all: [String] {
+        var result = system + bundled
+        let userSounds = custom
+        if !userSounds.isEmpty { result += userSounds }
+        return result
+    }
+
+    static let displayNames: [String: String] = [
+        "SB_finish": "Finish!",
+        "SB_dingdong": "Ding Dong",
+        "SB_magnificent": "Magnificent",
+        "SB_brilliant": "Brilliant",
+        "SB_heyhey": "Hey Hey Hey",
+        "SB_excuseme": "Excuse Me Human",
+        "SB_eora": "Eora?!",
+        "SB_attention": "Attention Please",
+    ]
+
+    static func displayName(_ key: String) -> String {
+        displayNames[key] ?? key.replacingOccurrences(of: "SB_", with: "")
+    }
 
     static func preview(_ name: String) {
         if name == "default" {

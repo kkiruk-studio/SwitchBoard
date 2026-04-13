@@ -54,10 +54,12 @@
 
 /* Notification */
 "settings.notification" = "通知";
-"settings.notify_on_complete" = "任务完成时通知";
+"settings.notify_on_complete" = "macOS 通知";
 "settings.notification_denied" = "系统设置中通知已关闭";
 "settings.open_system_settings" = "打开设置";
 "settings.notification_sound" = "提示音";
+"settings.sound_done" = "完成提示音";
+"settings.sound_needs_input" = "等待输入提示音";
 "settings.sound_default" = "默认";
 "settings.custom_notification_text" = "自定义通知文本";
 "settings.notify_text_done" = "完成";
@@ -74,6 +76,7 @@
 "settings.telegram_toggle" = "发送通知到 Telegram";
 "settings.telegram_bot_token" = "Bot Token（从 BotFather 获取）";
 "settings.telegram_chat_id" = "Chat ID";
+"settings.custom_sound_help" = "自定义声音：将 .aiff 文件放入 ~/Library/Sounds/ 即可自动显示在列表中";
 "settings.telegram_help" = "① 向 @BotFather 发送 /newbot → 复制令牌\n② 向 @userinfobot 发送消息 → 获取 Chat ID\n③ 向创建的机器人发送一条消息以激活通知";
 
 /* Sort */
