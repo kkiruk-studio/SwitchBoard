@@ -6,6 +6,24 @@
         <description>SwitchBoard updates</description>
         <language>en</language>
         <item>
+            <title>Version 1.1.1</title>
+            <pubDate>Sun, 13 Apr 2026 14:38:00 +0900</pubDate>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.1.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <ul>
+                    <li>Unified app name to SwitchBoard (capital B)</li>
+                </ul>
+            ]]></description>
+            <enclosure
+                url="https://github.com/kkiruk-studio/SwitchBoard/releases/download/v1.1.1/SwitchBoard.zip"
+                length="1967772"
+                type="application/octet-stream"
+                sparkle:edSignature="xQTF88uBgn2rcYaIgqq+nCO5emF0swaw6AqEbo04QRL3QC6hWP6bqisrT62/r58QTfBMKg9f4XyFcKO0AaNODQ=="
+            />
+        </item>
+        <item>
             <title>Version 1.1.0</title>
             <pubDate>Sun, 13 Apr 2026 14:30:00 +0900</pubDate>
             <sparkle:version>4</sparkle:version>
