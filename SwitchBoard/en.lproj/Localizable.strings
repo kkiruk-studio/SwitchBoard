@@ -67,14 +67,14 @@
 "notification.default.needs_input" = "Waiting for your input";
 "settings.slack_toggle" = "Send notifications to Slack";
 "settings.slack_url_placeholder" = "Paste Slack Incoming Webhook URL";
-"settings.slack_help" = "Copy the URL from Slack App Settings → Incoming Webhooks";
+"settings.slack_help" = "Slack App → Settings → Incoming Webhooks → Add New → Select channel → Copy URL";
 "settings.discord_toggle" = "Send notifications to Discord";
 "settings.discord_url_placeholder" = "Paste Discord Webhook URL";
-"settings.discord_help" = "Copy the URL from Server Settings → Integrations → Webhooks";
+"settings.discord_help" = "Server Settings → Integrations → Webhooks → New Webhook → Select channel → Copy URL";
 "settings.telegram_toggle" = "Send notifications to Telegram";
 "settings.telegram_bot_token" = "Bot Token (from BotFather)";
 "settings.telegram_chat_id" = "Chat ID";
-"settings.telegram_help" = "Create a bot via BotFather, then enter the token and chat ID";
+"settings.telegram_help" = "① Send /newbot to @BotFather → Copy bot token\n② Send any message to @userinfobot → Get your Chat ID\n③ Send any message to your bot once to activate notifications";
 
 /* Sort */
 "sort.status" = "Auto";

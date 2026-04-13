@@ -160,8 +160,8 @@ final class SessionManager: ObservableObject {
             } else {
                 workingCount[session.id] = 0
             }
-            // idle → working 전환 시에만 알림 이력 리셋 (새 작업 시작)
-            if prev == .idle && session.status == .working {
+            // 새 작업 시작 시 알림 이력 리셋 (idle/done/needs_input → working)
+            if (prev == .idle || prev == .done || prev == .needs_input) && session.status == .working {
                 notifiedSessions.remove(session.id)
             }
             if let prev = prev, prev != session.status {
@@ -234,10 +234,10 @@ final class SessionManager: ObservableObject {
         UNUserNotificationCenter.current().add(request)
 
         // 웹훅 알림
-        let message = "[\(session.name)] \(session.task)"
-        if slackEnabled { sendSlackWebhook(message: message) }
-        if discordEnabled { sendDiscordWebhook(message: message) }
-        if telegramEnabled { sendTelegramMessage(message: message) }
+        let webhookMessage = "[\(session.name)] \(content.body)"
+        if slackEnabled { sendSlackWebhook(message: webhookMessage) }
+        if discordEnabled { sendDiscordWebhook(message: webhookMessage) }
+        if telegramEnabled { sendTelegramMessage(message: webhookMessage) }
     }
 
     // MARK: - Webhooks

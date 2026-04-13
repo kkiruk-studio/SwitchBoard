@@ -67,14 +67,14 @@
 "notification.default.needs_input" = "입력 대기";
 "settings.slack_toggle" = "Slack으로 알림 보내기";
 "settings.slack_url_placeholder" = "Slack 수신 웹훅 URL 붙여넣기";
-"settings.slack_help" = "Slack 앱 설정 → 수신 웹훅에서 URL을 복사하세요";
+"settings.slack_help" = "Slack 앱 → 설정 → Incoming Webhooks 활성화 → Add New Webhook → 채널 선택 → URL 복사";
 "settings.discord_toggle" = "Discord로 알림 보내기";
 "settings.discord_url_placeholder" = "Discord 웹훅 URL 붙여넣기";
-"settings.discord_help" = "서버 설정 → 연동 → 웹후크에서 URL을 복사하세요";
+"settings.discord_help" = "서버 설정 → 연동 → 웹후크 → 새 웹후크 만들기 → 채널 선택 → 웹후크 URL 복사";
 "settings.telegram_toggle" = "Telegram으로 알림 보내기";
 "settings.telegram_bot_token" = "봇 토큰 (BotFather에서 발급)";
 "settings.telegram_chat_id" = "채팅 ID";
-"settings.telegram_help" = "BotFather로 봇을 만들고 토큰과 채팅 ID를 입력하세요";
+"settings.telegram_help" = "① @BotFather에게 /newbot 전송 → 봇 토큰 복사\n② @userinfobot에게 아무 메시지 전송 → Chat ID 확인\n③ 만든 봇에게 아무 메시지를 한 번 보내야 알림이 작동합니다";
 
 /* Sort */
 "sort.status" = "자동";

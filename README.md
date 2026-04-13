@@ -93,6 +93,27 @@ No server required. No network calls (except optional webhooks). Everything is l
 - **Notifications** — Enable/disable, custom messages, sound selection
 - **Webhooks** — Slack / Discord / Telegram
 
+## Webhook Setup
+
+### Slack
+1. Go to your [Slack App settings](https://api.slack.com/apps)
+2. Select your app (or create one) → **Incoming Webhooks** → Enable
+3. Click **Add New Webhook to Workspace** → Select a channel
+4. Copy the Webhook URL → Paste into SwitchBoard settings
+
+### Discord
+1. Open your Discord server → **Server Settings** → **Integrations**
+2. Click **Webhooks** → **New Webhook**
+3. Select a channel → **Copy Webhook URL**
+4. Paste into SwitchBoard settings
+
+### Telegram
+1. Open Telegram and search for **@BotFather**
+2. Send `/newbot` → Follow prompts to name your bot
+3. Copy the **Bot Token** (e.g. `123456:ABC-DEF...`) → Paste into SwitchBoard settings
+4. Search for **@userinfobot** → Send any message → It replies with your **Chat ID** → Paste into settings
+5. **Important:** Send any message to your new bot once — this activates the bot so it can send you notifications
+
 ## License
 
 MIT

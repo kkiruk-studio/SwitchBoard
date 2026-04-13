@@ -67,14 +67,14 @@
 "notification.default.needs_input" = "等待您的輸入";
 "settings.slack_toggle" = "傳送通知到 Slack";
 "settings.slack_url_placeholder" = "貼上 Slack 傳入 Webhook URL";
-"settings.slack_help" = "從 Slack 應用程式設定 → 傳入 Webhook 複製 URL";
+"settings.slack_help" = "Slack 應用 → 設定 → Incoming Webhooks 啟用 → 新增 → 選擇頻道 → 複製 URL";
 "settings.discord_toggle" = "傳送通知到 Discord";
 "settings.discord_url_placeholder" = "貼上 Discord Webhook URL";
-"settings.discord_help" = "從伺服器設定 → 整合 → Webhook 複製 URL";
+"settings.discord_help" = "伺服器設定 → 整合 → Webhook → 新建 → 選擇頻道 → 複製 URL";
 "settings.telegram_toggle" = "傳送通知到 Telegram";
 "settings.telegram_bot_token" = "Bot Token（從 BotFather 取得）";
 "settings.telegram_chat_id" = "Chat ID";
-"settings.telegram_help" = "透過 BotFather 建立機器人，然後輸入令牌和聊天 ID";
+"settings.telegram_help" = "① 向 @BotFather 傳送 /newbot → 複製令牌\n② 向 @userinfobot 傳送訊息 → 取得 Chat ID\n③ 向建立的機器人傳送一條訊息以啟用通知";
 
 /* Sort */
 "sort.status" = "自動";

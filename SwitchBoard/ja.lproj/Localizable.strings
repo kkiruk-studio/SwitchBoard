@@ -67,14 +67,14 @@
 "notification.default.needs_input" = "入力を待っています";
 "settings.slack_toggle" = "Slackに通知を送信";
 "settings.slack_url_placeholder" = "Slack受信Webhook URLを貼り付け";
-"settings.slack_help" = "Slackアプリ設定 → 受信Webhookからコピーしてください";
+"settings.slack_help" = "Slackアプリ → 設定 → Incoming Webhooks有効化 → 新規追加 → チャンネル選択 → URLコピー";
 "settings.discord_toggle" = "Discordに通知を送信";
 "settings.discord_url_placeholder" = "Discord Webhook URLを貼り付け";
-"settings.discord_help" = "サーバー設定 → 連携 → WebhookからURLをコピーしてください";
+"settings.discord_help" = "サーバー設定 → 連携 → Webhook → 新規作成 → チャンネル選択 → URLコピー";
 "settings.telegram_toggle" = "Telegramに通知を送信";
 "settings.telegram_bot_token" = "ボットトークン（BotFatherから取得）";
 "settings.telegram_chat_id" = "チャットID";
-"settings.telegram_help" = "BotFatherでボットを作成し、トークンとチャットIDを入力してください";
+"settings.telegram_help" = "① @BotFatherに /newbot を送信 → トークンをコピー\n② @userinfobot にメッセージを送信 → Chat IDを確認\n③ 作成したボットにメッセージを一度送信すると通知が有効になります";
 
 /* Sort */
 "sort.status" = "自動";
