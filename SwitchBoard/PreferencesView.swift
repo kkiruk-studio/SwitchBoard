@@ -232,7 +232,7 @@ private struct AboutTab: View {
             Image(nsImage: NSApp.applicationIconImage)
                 .resizable()
                 .frame(width: 64, height: 64)
-            Text("Switchboard")
+            Text("SwitchBoard")
                 .font(.title2.bold())
             Text("credit.version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                 .font(.caption)

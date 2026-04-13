@@ -46,7 +46,7 @@ struct DashboardView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Text("Switchboard")
+            Text("SwitchBoard")
                 .font(.headline)
                 .fixedSize()
 

@@ -6,7 +6,7 @@ struct SwitchBoardApp: App {
     @StateObject private var sessionManager = SessionManager()
 
     var body: some Scene {
-        Window("Switchboard", id: "dashboard") {
+        Window("SwitchBoard", id: "dashboard") {
             DashboardView(sessionManager: sessionManager)
                 .frame(minWidth: 370, minHeight: 300)
                 .onAppear {

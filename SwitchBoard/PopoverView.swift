@@ -8,7 +8,7 @@ struct PopoverView: View {
         VStack(spacing: 0) {
             // 헤더
             HStack {
-                Text("Switchboard")
+                Text("SwitchBoard")
                     .font(.headline)
                 Spacer()
                 Button {

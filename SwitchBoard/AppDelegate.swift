@@ -19,7 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag {
-            for window in sender.windows where window.title == "Switchboard" {
+            for window in sender.windows where window.title == "SwitchBoard" {
                 window.makeKeyAndOrderFront(nil)
             }
         }
@@ -72,7 +72,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     }
 
     private func applyAlwaysOnTop() {
-        guard let window = NSApp.windows.first(where: { $0.title == "Switchboard" }) else { return }
+        guard let window = NSApp.windows.first(where: { $0.title == "SwitchBoard" }) else { return }
         window.level = alwaysOnTop ? .floating : .normal
     }
 
@@ -163,7 +163,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     private func showDashboard() {
         NSApp.activate(ignoringOtherApps: true)
-        if let window = NSApp.windows.first(where: { $0.title == "Switchboard" }) {
+        if let window = NSApp.windows.first(where: { $0.title == "SwitchBoard" }) {
             window.makeKeyAndOrderFront(nil)
         }
     }
