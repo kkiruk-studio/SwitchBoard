@@ -97,6 +97,24 @@ struct DashboardView: View {
             }
             .pickerStyle(.segmented)
             .frame(width: 70)
+
+            if #available(macOS 14.0, *) {
+                SettingsLink {
+                    Image(systemName: "gear")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button {
+                    NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+                } label: {
+                    Image(systemName: "gear")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -215,26 +233,20 @@ struct DashboardView: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
             Spacer()
+            if sessionManager.sessions.contains(where: { $0.estimatedCost > 0 }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "flame")
+                        .font(.caption2)
+                        .foregroundStyle(.orange.opacity(0.6))
+                    Text("footer.cost_note")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            Spacer()
             Text(currentTime, format: .dateTime.hour().minute().second())
                 .font(.system(.caption2, design: .monospaced))
                 .foregroundStyle(.tertiary)
-            if #available(macOS 14.0, *) {
-                SettingsLink {
-                    Image(systemName: "gear")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-            } else {
-                Button {
-                    NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-                } label: {
-                    Image(systemName: "gear")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -337,15 +349,21 @@ struct SessionTileView: View {
 
             Spacer(minLength: 0)
 
-            // 토큰
+            // 토큰 + 환산가
             if !session.tokenSummary.isEmpty {
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     Image(systemName: "flame")
                         .font(.caption2)
                         .foregroundStyle(.orange.opacity(0.7))
                     Text(session.tokenSummary)
                         .font(.system(.caption2, design: .monospaced))
                         .foregroundStyle(.secondary)
+                    if !session.costSummary.isEmpty {
+                        Text("≈ \(session.costSummary)")
+                            .font(.system(.caption2, design: .monospaced))
+                            .foregroundStyle(.tertiary)
+                            .help(NSLocalizedString("tooltip.cost_estimate", comment: ""))
+                    }
                     Spacer()
                 }
             }
@@ -491,6 +509,14 @@ struct SessionRowView: View {
                     .font(.system(.caption2, design: .monospaced))
                     .foregroundStyle(.secondary)
                     .frame(width: 40, alignment: .trailing)
+            }
+
+            if !session.costSummary.isEmpty {
+                Text("≈ \(session.costSummary)")
+                    .font(.system(.caption2, design: .monospaced))
+                    .foregroundStyle(.tertiary)
+                    .frame(width: 56, alignment: .trailing)
+                    .help(NSLocalizedString("tooltip.cost_estimate", comment: ""))
             }
 
             Text(session.status.label)

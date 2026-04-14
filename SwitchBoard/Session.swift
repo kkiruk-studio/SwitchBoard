@@ -66,14 +66,23 @@ struct Session: Identifiable {
     let cwd: String
     var inputTokens: Int = 0
     var outputTokens: Int = 0
+    var cacheReadTokens: Int = 0
+    var cacheWriteTokens: Int = 0
+    var estimatedCost: Double = 0
     var mcpServers: [String] = []
 
     var tokenSummary: String {
-        if inputTokens == 0 && outputTokens == 0 { return "" }
-        let total = inputTokens + outputTokens
+        let total = inputTokens + outputTokens + cacheReadTokens + cacheWriteTokens
+        if total == 0 { return "" }
         if total >= 1_000_000 { return String(format: "%.1fM", Double(total) / 1_000_000.0) }
         if total >= 1_000 { return String(format: "%.1fK", Double(total) / 1_000.0) }
         return "\(total)"
+    }
+
+    var costSummary: String {
+        guard estimatedCost > 0 else { return "" }
+        if estimatedCost < 0.01 { return "<$0.01" }
+        return String(format: "$%.2f", estimatedCost)
     }
 
     var memo: String {

@@ -29,6 +29,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().delegate = self
 
+        PricingTable.loadCached()
+        PricingTable.refreshIfStale()
+
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
             let sizeConfig = NSImage.SymbolConfiguration(pointSize: 13, weight: .medium)

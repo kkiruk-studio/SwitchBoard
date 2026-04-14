@@ -90,3 +90,5 @@
 "credit.supported_terminals" = "Supported Terminals:";
 "credit.author" = "Made by kkirk studio";
 "settings.check_for_updates" = "Check for Updates";
+"tooltip.cost_estimate" = "Estimated API cost (not your actual subscription billing)";
+"footer.cost_note" = "Token usage = ≈ estimated API cost (not subscription billing)";

@@ -34,7 +34,7 @@ final class SessionManager: ObservableObject {
     private var notifiedSessions: Set<String> = [] // 알림 중복 방지
     private var workingCount: [String: Int] = [:] // working 연속 횟수
     private var previousWorkingCount: [String: Int] = [:] // 직전 폴링까지의 working 횟수
-    private var tokenAccumulator: [String: (input: Int, output: Int)] = [:] // 세션별 누적 토큰
+    private var tokenAccumulator: [String: (input: Int, output: Int, cacheRead: Int, cacheWrite: Int, cost: Double)] = [:] // 세션별 누적 토큰 + 금액
     private var lastReadOffset: [String: UInt64] = [:] // 세션별 마지막 읽은 위치
     private var ttyCache: [Int: String] = [:] // PID별 TTY 캐시 (프로세스 재실행 전까지 불변)
 
@@ -135,6 +135,9 @@ final class SessionManager: ObservableObject {
                 cwd: info.cwd,
                 inputTokens: tokens.input,
                 outputTokens: tokens.output,
+                cacheReadTokens: tokens.cacheRead,
+                cacheWriteTokens: tokens.cacheWrite,
+                estimatedCost: tokens.cost,
                 mcpServers: mcpServers
             ))
         }
@@ -620,39 +623,52 @@ final class SessionManager: ObservableObject {
         return ""
     }
 
-    private func readTokenUsage(sessionId: String) -> (input: Int, output: Int) {
+    private func readTokenUsage(sessionId: String) -> (input: Int, output: Int, cacheRead: Int, cacheWrite: Int, cost: Double) {
+        let empty: (Int, Int, Int, Int, Double) = (0, 0, 0, 0, 0)
         guard let jsonlPath = findJsonlFile(sessionId: sessionId),
               let fileHandle = try? FileHandle(forReadingFrom: jsonlPath) else {
-            return tokenAccumulator[sessionId] ?? (0, 0)
+            return tokenAccumulator[sessionId] ?? empty
         }
         defer { fileHandle.closeFile() }
 
         let fileSize = fileHandle.seekToEndOfFile()
         let offset = lastReadOffset[sessionId] ?? 0
 
-        // 새로 추가된 내용이 없으면 기존 누적값 반환
         if fileSize <= offset {
-            return tokenAccumulator[sessionId] ?? (0, 0)
+            return tokenAccumulator[sessionId] ?? empty
         }
 
-        // 마지막 읽은 위치부터 새 줄만 읽기
         fileHandle.seek(toFileOffset: offset)
         guard let data = try? fileHandle.availableData,
               let text = String(data: data, encoding: .utf8) else {
-            return tokenAccumulator[sessionId] ?? (0, 0)
+            return tokenAccumulator[sessionId] ?? empty
         }
 
-        var accumulated = tokenAccumulator[sessionId] ?? (0, 0)
+        var accumulated = tokenAccumulator[sessionId] ?? empty
         let lines = text.components(separatedBy: "\n")
         for line in lines where !line.isEmpty {
             guard let lineData = line.data(using: .utf8),
-                  let json = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any] else { continue }
+                  let json = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
+                  let message = json["message"] as? [String: Any],
+                  let usage = message["usage"] as? [String: Any] else { continue }
 
-            if let message = json["message"] as? [String: Any],
-               let usage = message["usage"] as? [String: Any] {
-                if let input = usage["input_tokens"] as? Int { accumulated.input += input }
-                if let output = usage["output_tokens"] as? Int { accumulated.output += output }
-            }
+            let model = message["model"] as? String
+            let input = usage["input_tokens"] as? Int ?? 0
+            let output = usage["output_tokens"] as? Int ?? 0
+            let cacheRead = usage["cache_read_input_tokens"] as? Int ?? 0
+            let cacheWrite = usage["cache_creation_input_tokens"] as? Int ?? 0
+
+            accumulated.0 += input
+            accumulated.1 += output
+            accumulated.2 += cacheRead
+            accumulated.3 += cacheWrite
+            accumulated.4 += PricingTable.cost(
+                model: model,
+                input: input,
+                output: output,
+                cacheRead: cacheRead,
+                cacheWrite: cacheWrite
+            )
         }
 
         tokenAccumulator[sessionId] = accumulated
