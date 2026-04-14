@@ -6,6 +6,32 @@
         <description>SwitchBoard updates</description>
         <language>en</language>
         <item>
+            <title>Version 1.2.0</title>
+            <pubDate>Tue, 14 Apr 2026 11:30:00 +0900</pubDate>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>New Features</h2>
+                <ul>
+                    <li>MCP server detection per session — click the pill in the top row of each tile to see the full list</li>
+                    <li>Estimated API cost next to token usage, priced per model with cache tokens accounted for</li>
+                    <li>Pricing auto-refreshes from LiteLLM every 3 days, with a hardcoded fallback when offline</li>
+                </ul>
+                <h2>UI</h2>
+                <ul>
+                    <li>Settings button moved to the top-right header</li>
+                    <li>Cost estimate can be toggled off in Preferences</li>
+                </ul>
+            ]]></description>
+            <enclosure
+                url="https://github.com/kkiruk-studio/SwitchBoard/releases/download/v1.2.0/SwitchBoard.zip"
+                length="2017844"
+                type="application/octet-stream"
+                sparkle:edSignature="WuAiyrzVpPuoKqXSgcEoaV1+VP7MFJQxn6sPR+tU6F0HapH1vkK4JJwCGZStHoRAMMEud6O+yJX7eyXrZNDJCQ=="
+            />
+        </item>
+        <item>
             <title>Version 1.1.1</title>
             <pubDate>Sun, 13 Apr 2026 14:38:00 +0900</pubDate>
             <sparkle:version>5</sparkle:version>
