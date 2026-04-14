@@ -26,6 +26,7 @@
 		A1000010 /* SB_excuseme.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D6 /* SB_excuseme.aiff */; };
 		A1000011 /* SB_eora.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D7 /* SB_eora.aiff */; };
 		A1000012 /* SB_attention.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D8 /* SB_attention.aiff */; };
+		A1000013 /* MCPDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* MCPDetector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		A200000F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A2000010 /* SwitchBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwitchBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000011 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A2000012 /* MCPDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				A2000002 /* AppDelegate.swift */,
 				A2000003 /* SessionManager.swift */,
 				A2000004 /* Session.swift */,
+				A2000012 /* MCPDetector.swift */,
 				A2000005 /* FloatingPanel.swift */,
 				A2000006 /* DashboardView.swift */,
 				A2000007 /* PreferencesView.swift */,
@@ -198,6 +201,7 @@
 				A1000002 /* AppDelegate.swift in Sources */,
 				A1000003 /* SessionManager.swift in Sources */,
 				A1000004 /* Session.swift in Sources */,
+				A1000013 /* MCPDetector.swift in Sources */,
 				A1000005 /* FloatingPanel.swift in Sources */,
 				A1000006 /* DashboardView.swift in Sources */,
 				A1000007 /* PreferencesView.swift in Sources */,

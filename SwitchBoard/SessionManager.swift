@@ -121,6 +121,7 @@ final class SessionManager: ObservableObject {
                 tty = ""
             }
             let tokens = readTokenUsage(sessionId: info.sessionId)
+            let mcpServers = MCPDetector.detect(cwd: info.cwd)
             currentSessionIds.insert(info.sessionId)
 
             result.append(Session(
@@ -131,8 +132,10 @@ final class SessionManager: ObservableObject {
                 updated: ISO8601DateFormatter().string(from: startDate),
                 pid: info.pid,
                 tty: tty,
+                cwd: info.cwd,
                 inputTokens: tokens.input,
-                outputTokens: tokens.output
+                outputTokens: tokens.output,
+                mcpServers: mcpServers
             ))
         }
 

@@ -63,8 +63,10 @@ struct Session: Identifiable {
     let updated: String
     let pid: Int
     let tty: String
+    let cwd: String
     var inputTokens: Int = 0
     var outputTokens: Int = 0
+    var mcpServers: [String] = []
 
     var tokenSummary: String {
         if inputTokens == 0 && outputTokens == 0 { return "" }

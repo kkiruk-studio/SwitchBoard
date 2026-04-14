@@ -248,10 +248,11 @@ struct SessionTileView: View {
     var onTerminate: (() -> Void)?
     @State private var isEditingMemo = false
     @State private var memoText = ""
+    @State private var showMCPPopover = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // 상태 아이콘 + 라벨
+            // 상태 아이콘 + 라벨 + MCP
             HStack(spacing: 4) {
                 Image(systemName: session.status.icon)
                     .font(.caption2)
@@ -259,7 +260,46 @@ struct SessionTileView: View {
                 Text(session.status.label)
                     .font(.caption2)
                     .foregroundStyle(session.status.color)
-                Spacer()
+                Spacer(minLength: 4)
+                if !session.mcpServers.isEmpty {
+                    Button {
+                        showMCPPopover.toggle()
+                    } label: {
+                        HStack(spacing: 3) {
+                            Image(systemName: "powerplug.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.purple.opacity(0.7))
+                            Text(mcpCompactLabel)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                            if session.mcpServers.count > 1 {
+                                Image(systemName: "chevron.down")
+                                    .font(.system(size: 8, weight: .semibold))
+                                    .foregroundStyle(.tertiary)
+                            }
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.purple.opacity(0.08))
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .popover(isPresented: $showMCPPopover, arrowEdge: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(session.mcpServers, id: \.self) { name in
+                                HStack(spacing: 6) {
+                                    Image(systemName: "powerplug.fill")
+                                        .font(.caption2)
+                                        .foregroundStyle(.purple.opacity(0.7))
+                                    Text(name).font(.caption)
+                                }
+                            }
+                        }
+                        .padding(10)
+                    }
+                }
             }
 
             // 프로젝트 이름
@@ -358,6 +398,11 @@ struct SessionTileView: View {
         }
     }
 
+    private var mcpCompactLabel: String {
+        guard let first = session.mcpServers.first else { return "" }
+        return session.mcpServers.count > 1 ? "\(first), …" : first
+    }
+
     private var tileBackground: some View {
         Group {
             switch session.status {
@@ -426,6 +471,20 @@ struct SessionRowView: View {
             }
 
             Spacer()
+
+            if !session.mcpServers.isEmpty {
+                HStack(spacing: 3) {
+                    Image(systemName: "powerplug.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.purple.opacity(0.7))
+                    Text(session.mcpServers.joined(separator: ", "))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                }
+                .frame(maxWidth: 160, alignment: .leading)
+            }
 
             if !session.tokenSummary.isEmpty {
                 Text(session.tokenSummary)
