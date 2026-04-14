@@ -88,7 +88,7 @@
 "credit.version %@" = "Version %@";
 "credit.description" = "Monitor your Claude Code sessions at a glance.";
 "credit.supported_terminals" = "Supported Terminals:";
-"credit.author" = "Made by kkirk studio";
+"credit.author" = "Made by kkiruk studio";
 "settings.check_for_updates" = "Check for Updates";
 "tooltip.cost_estimate" = "Estimated API cost (not your actual subscription billing)";
 "footer.cost_note" = "Token usage ≈ estimated API cost (not subscription billing)";

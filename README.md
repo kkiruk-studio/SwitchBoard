@@ -122,4 +122,4 @@ MIT
 
 ---
 
-Made by [kkirk studio](https://github.com/kkiruk-studio)
+Made by [kkiruk studio](https://github.com/kkiruk-studio)

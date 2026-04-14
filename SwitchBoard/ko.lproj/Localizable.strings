@@ -88,7 +88,7 @@
 "credit.version %@" = "버전 %@";
 "credit.description" = "Claude Code 세션 상태를 한눈에 확인하세요.";
 "credit.supported_terminals" = "지원 터미널:";
-"credit.author" = "Made by kkirk studio";
+"credit.author" = "Made by kkiruk studio";
 "settings.check_for_updates" = "업데이트 확인";
 "tooltip.cost_estimate" = "API 기준 환산가 (구독자는 실제 청구와 무관)";
 "footer.cost_note" = "토큰 사용량 ≈ API 기준 환산가 (구독 청구와 무관)";

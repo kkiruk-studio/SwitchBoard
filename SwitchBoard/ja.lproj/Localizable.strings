@@ -88,7 +88,7 @@
 "credit.version %@" = "バージョン %@";
 "credit.description" = "Claude Codeセッションの状態を一目で確認できます。";
 "credit.supported_terminals" = "対応ターミナル:";
-"credit.author" = "Made by kkirk studio";
+"credit.author" = "Made by kkiruk studio";
 "settings.check_for_updates" = "アップデートを確認";
 "tooltip.cost_estimate" = "API基準の換算価格（サブスクリプションの実請求とは無関係）";
 "footer.cost_note" = "トークン使用量 ≈ API基準の換算価格（サブスクリプション請求とは無関係）";

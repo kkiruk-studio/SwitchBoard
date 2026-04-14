@@ -88,7 +88,7 @@
 "credit.version %@" = "版本 %@";
 "credit.description" = "一目了然地監控Claude Code工作階段狀態。";
 "credit.supported_terminals" = "支援的終端機:";
-"credit.author" = "Made by kkirk studio";
+"credit.author" = "Made by kkiruk studio";
 "settings.check_for_updates" = "檢查更新";
 "tooltip.cost_estimate" = "依 API 價格換算（與訂閱實際帳單無關）";
 "footer.cost_note" = "Token 用量 ≈ API 價格換算（與訂閱帳單無關）";
