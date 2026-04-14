@@ -35,6 +35,7 @@ private struct GeneralTab: View {
     @AppStorage("pollInterval") private var pollInterval = 3.0
     @AppStorage("alwaysOnTop") private var alwaysOnTop = false
     @AppStorage("menuBarBadge") private var menuBarBadge = "always"
+    @AppStorage("hideCostEstimate") private var hideCostEstimate = false
     @State private var launchAtLogin = false
 
     var body: some View {
@@ -54,6 +55,16 @@ private struct GeneralTab: View {
             }
             .pickerStyle(.menu)
 
+            VStack(alignment: .leading, spacing: 4) {
+                Toggle("settings.show_cost_estimate", isOn: Binding(
+                    get: { !hideCostEstimate },
+                    set: { hideCostEstimate = !$0 }
+                ))
+                Text("settings.show_cost_estimate.desc")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             Toggle("settings.always_on_top", isOn: $alwaysOnTop)
             Toggle("settings.launch_at_login", isOn: $launchAtLogin)
                 .onChange(of: launchAtLogin) { newValue in

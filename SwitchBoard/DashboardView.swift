@@ -5,6 +5,7 @@ enum ViewMode: String {
 }
 
 struct DashboardView: View {
+    @AppStorage("hideCostEstimate") private var hideCostEstimate = false
     @ObservedObject var sessionManager: SessionManager
     @AppStorage("viewMode") private var viewMode: String = ViewMode.grid.rawValue
     @State private var currentTime = Date()
@@ -226,27 +227,18 @@ struct DashboardView: View {
     // MARK: - Footer
 
     private var footer: some View {
-        HStack {
+        HStack(spacing: 8) {
             let active = sessionManager.sessions.filter { $0.status == .working }.count
             let total = sessionManager.sessions.count
             Text(String(format: NSLocalizedString("dashboard.active_count", comment: ""), active, total))
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
-            Spacer()
-            if sessionManager.sessions.contains(where: { $0.estimatedCost > 0 }) {
-                HStack(spacing: 4) {
-                    Image(systemName: "flame")
-                        .font(.caption2)
-                        .foregroundStyle(.orange.opacity(0.6))
-                    Text("footer.cost_note")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
-            }
+                .fixedSize()
             Spacer()
             Text(currentTime, format: .dateTime.hour().minute().second())
                 .font(.system(.caption2, design: .monospaced))
                 .foregroundStyle(.tertiary)
+                .fixedSize()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -258,6 +250,7 @@ struct DashboardView: View {
 struct SessionTileView: View {
     let session: Session
     var onTerminate: (() -> Void)?
+    @AppStorage("hideCostEstimate") private var hideCostEstimate = false
     @State private var isEditingMemo = false
     @State private var memoText = ""
     @State private var showMCPPopover = false
@@ -358,13 +351,16 @@ struct SessionTileView: View {
                     Text(session.tokenSummary)
                         .font(.system(.caption2, design: .monospaced))
                         .foregroundStyle(.secondary)
-                    if !session.costSummary.isEmpty {
+                        .fixedSize()
+                    if !hideCostEstimate, !session.costSummary.isEmpty {
                         Text("≈ \(session.costSummary)")
                             .font(.system(.caption2, design: .monospaced))
                             .foregroundStyle(.tertiary)
+                            .fixedSize()
+                            .lineLimit(1)
                             .help(NSLocalizedString("tooltip.cost_estimate", comment: ""))
                     }
-                    Spacer()
+                    Spacer(minLength: 0)
                 }
             }
 
@@ -447,6 +443,7 @@ struct SessionTileView: View {
 struct SessionRowView: View {
     let session: Session
     var onTerminate: (() -> Void)?
+    @AppStorage("hideCostEstimate") private var hideCostEstimate = false
     @State private var isEditingMemo = false
     @State private var memoText = ""
 
@@ -511,7 +508,7 @@ struct SessionRowView: View {
                     .frame(width: 40, alignment: .trailing)
             }
 
-            if !session.costSummary.isEmpty {
+            if !hideCostEstimate, !session.costSummary.isEmpty {
                 Text("≈ \(session.costSummary)")
                     .font(.system(.caption2, design: .monospaced))
                     .foregroundStyle(.tertiary)

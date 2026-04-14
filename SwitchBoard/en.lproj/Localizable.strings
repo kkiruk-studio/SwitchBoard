@@ -91,4 +91,8 @@
 "credit.author" = "Made by kkirk studio";
 "settings.check_for_updates" = "Check for Updates";
 "tooltip.cost_estimate" = "Estimated API cost (not your actual subscription billing)";
-"footer.cost_note" = "Token usage = ≈ estimated API cost (not subscription billing)";
+"footer.cost_note" = "Token usage ≈ estimated API cost (not subscription billing)";
+"footer.cost_note_dismiss" = "Click to dismiss";
+"settings.show_cost_note" = "Show token usage note in footer";
+"settings.show_cost_estimate" = "Show cost estimate";
+"settings.show_cost_estimate.desc" = "Token usage converted to API-equivalent cost. Not related to your actual Pro/Max subscription billing.";

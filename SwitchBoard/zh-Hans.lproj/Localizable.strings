@@ -91,4 +91,8 @@
 "credit.author" = "Made by kkirk studio";
 "settings.check_for_updates" = "检查更新";
 "tooltip.cost_estimate" = "按 API 价格估算（与订阅实际账单无关）";
-"footer.cost_note" = "Token 用量 = ≈ API 价格估算（与订阅账单无关）";
+"footer.cost_note" = "Token 用量 ≈ API 价格估算（与订阅账单无关）";
+"footer.cost_note_dismiss" = "点击隐藏";
+"settings.show_cost_note" = "在底部显示 Token 用量说明";
+"settings.show_cost_estimate" = "显示价格估算";
+"settings.show_cost_estimate.desc" = "按 API 价格换算的金额。与订阅（Pro/Max）实际账单无关。";

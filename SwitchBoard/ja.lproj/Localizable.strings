@@ -91,4 +91,8 @@
 "credit.author" = "Made by kkirk studio";
 "settings.check_for_updates" = "アップデートを確認";
 "tooltip.cost_estimate" = "API基準の換算価格（サブスクリプションの実請求とは無関係）";
-"footer.cost_note" = "トークン使用量 = ≈ API基準の換算価格（サブスクリプション請求とは無関係）";
+"footer.cost_note" = "トークン使用量 ≈ API基準の換算価格（サブスクリプション請求とは無関係）";
+"footer.cost_note_dismiss" = "クリックで非表示";
+"settings.show_cost_note" = "フッターにトークン使用量の説明を表示";
+"settings.show_cost_estimate" = "換算価格を表示";
+"settings.show_cost_estimate.desc" = "トークン使用量をAPI基準で換算した金額です。サブスクリプション（Pro/Max）の実請求とは無関係です。";
