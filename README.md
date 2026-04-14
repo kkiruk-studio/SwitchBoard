@@ -21,7 +21,9 @@ If you run multiple Claude Code instances across different terminal tabs, Switch
   - ⌨️ **Needs Input** — Waiting for your input
   - ✅ **Done** — Turn completed
   - 🌙 **Idle** — Session ended
-- **Token usage** — Shows input/output token counts per session
+- **Token usage** — Shows input/output + cache token counts per session
+- **Estimated API cost** — Per-model pricing next to token usage. Pricing auto-refreshes from the LiteLLM feed every 3 days with a hardcoded fallback. Can be toggled off in Preferences. (This is an API-equivalent estimate, not your actual Pro/Max subscription billing.)
+- **MCP servers** — Each tile shows the MCP servers configured for that session (parsed from `~/.claude.json` global/per-project scope and any project-local `.mcp.json`). Click the pill to see the full list.
 
 ### Dashboard
 - **Grid & List views** — Toggle between tile grid and compact list
