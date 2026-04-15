@@ -15,7 +15,7 @@ If you run multiple Claude Code instances across different terminal tabs, Switch
 ## Features
 
 ### Session monitoring
-- **Real-time status detection** — Monitors `~/.claude/sessions/` and JSONL transcripts
+- **Instant status transitions** — Driven by Claude Code hooks, not polling. Working / Done / Needs-input flip the moment Claude changes state.
 - **Status types:**
   - ⚡ **Working** — Claude is actively processing
   - ⌨️ **Needs Input** — Waiting for your input
@@ -41,8 +41,9 @@ If you run multiple Claude Code instances across different terminal tabs, Switch
 - **Global hotkey** — `⌘⇧S` from anywhere to toggle the popover
 
 ### Notifications
-- **Hook-driven, zero delay** — SwitchBoard registers itself as a Claude Code `Stop`/`Notification` hook on first launch, so completion and input-waiting alerts fire the instant Claude stops — no polling lag, no false positives.
+- **Hook-driven, zero delay** — SwitchBoard registers itself as Claude Code `Stop` / `Notification` / `UserPromptSubmit` hooks on first launch. Dashboard and alerts flip the instant Claude stops — no polling lag, no false positives.
 - **Automatic setup** — The app safely merges its entries into `~/.claude/settings.json` on launch. Any existing hooks you've added (e.g. `terminal-notifier`) are preserved untouched.
+- **Smart idle filter** — Claude Code's periodic "waiting for your input" reminder does NOT flip state to needs-input. Only real attention-needed notifications (permission requests, etc.) do.
 - **Webhooks** — Slack, Discord, Telegram integration
 - **Custom messages & sounds** — Override default text and pick a distinct sound for done vs. needs-input
 
@@ -79,21 +80,26 @@ Then build and run in Xcode (⌘R).
 
 ## How it works
 
-SwitchBoard reads Claude Code's local session files:
+SwitchBoard splits session monitoring into two layers, each doing what it's best at:
 
-1. **`~/.claude/sessions/*.json`** — Discovers active sessions (PID, project path, start time)
-2. **Process status** — Checks if each PID is alive and its CPU usage
-3. **JSONL transcripts** — Reads the last messages to determine status
+**Hook layer (status transitions)** — On first launch, SwitchBoard merges its CLI into `~/.claude/settings.json` as three hooks. Claude Code fires them the instant each event happens:
+
+- `UserPromptSubmit` → working
+- `Stop` → done
+- `Notification` → needs-input (idle reminders filtered out)
+
+The hook fires a tiny CLI that sends a Darwin distributed notification to the running app — typically under 10 ms end to end.
+
+**Polling layer (inventory)** — Every 3 seconds, SwitchBoard reads `~/.claude/sessions/*.json` to discover new sessions, detect dead PIDs (crashes, `kill -9`), and accumulate tokens/cost from the JSONL transcripts. Status detection from JSONL is used only to bootstrap sessions that existed before hooks were installed; once any hook has fired for a session, hooks are the single source of truth.
 
 No server required. No network calls (except optional webhooks). Everything is local.
 
 ## Settings
 
-- **Poll interval** — 2s / 3s / 5s / 10s
 - **Menu bar badge** — Always / Active only / Icon only
 - **Always on top** — Keep the window above all others
 - **Launch at login** — Start automatically when you log in
-- **Notifications** — Enable/disable, custom messages, sound selection
+- **Notifications** — Enable/disable, custom messages, distinct sounds for done vs. needs-input
 - **Webhooks** — Slack / Discord / Telegram
 
 ## Webhook Setup
