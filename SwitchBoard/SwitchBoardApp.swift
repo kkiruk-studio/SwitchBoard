@@ -1,6 +1,6 @@
 import SwiftUI
 
-@main
+// 진입점은 main.swift에서 분기한 뒤 SwitchBoardApp.main()을 호출한다.
 struct SwitchBoardApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var sessionManager = SessionManager()

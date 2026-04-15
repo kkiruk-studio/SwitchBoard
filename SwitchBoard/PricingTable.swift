@@ -80,9 +80,15 @@ enum PricingTable {
         let lower = model.lowercased()
         // 1) 원격 정확 매치
         if let exact = remote[model] { return exact }
-        // 2) 원격 부분 매치 (접미사/접두사 버전 차이)
-        if let partial = remote.first(where: { lower.contains($0.key.lowercased()) || $0.key.lowercased().contains(lower) }) {
-            return partial.value
+        // 2) 원격 부분 매치 — Dictionary 반복 순서는 비결정적이라
+        //    first(where:)를 쓰면 같은 모델이 실행마다 다른 rates에 매칭될 수 있다.
+        //    가장 긴(구체적인) 키를 선택해 결정적으로 매칭한다.
+        let candidates = remote.filter { key, _ in
+            let k = key.lowercased()
+            return lower.contains(k) || k.contains(lower)
+        }
+        if let best = candidates.max(by: { $0.key.count < $1.key.count }) {
+            return best.value
         }
         // 3) 폴백 패턴 매칭
         for entry in fallbackRates where lower.contains(entry.pattern) {

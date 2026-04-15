@@ -41,9 +41,10 @@ If you run multiple Claude Code instances across different terminal tabs, Switch
 - **Global hotkey** — `⌘⇧S` from anywhere to toggle the popover
 
 ### Notifications
-- **macOS notifications** — Get notified when sessions complete or need input
+- **Hook-driven, zero delay** — SwitchBoard registers itself as a Claude Code `Stop`/`Notification` hook on first launch, so completion and input-waiting alerts fire the instant Claude stops — no polling lag, no false positives.
+- **Automatic setup** — The app safely merges its entries into `~/.claude/settings.json` on launch. Any existing hooks you've added (e.g. `terminal-notifier`) are preserved untouched.
 - **Webhooks** — Slack, Discord, Telegram integration
-- **Custom messages** — Override default notification text
+- **Custom messages & sounds** — Override default text and pick a distinct sound for done vs. needs-input
 
 ### Other
 - **Auto-updates** — Built-in update checker via Sparkle

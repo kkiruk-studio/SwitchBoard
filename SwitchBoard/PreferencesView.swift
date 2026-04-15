@@ -32,7 +32,6 @@ struct PreferencesView: View {
 // MARK: - 일반
 
 private struct GeneralTab: View {
-    @AppStorage("pollInterval") private var pollInterval = 3.0
     @AppStorage("alwaysOnTop") private var alwaysOnTop = false
     @AppStorage("menuBarBadge") private var menuBarBadge = "always"
     @AppStorage("hideCostEstimate") private var hideCostEstimate = false
@@ -40,14 +39,6 @@ private struct GeneralTab: View {
 
     var body: some View {
         Form {
-            Picker("settings.poll_interval", selection: $pollInterval) {
-                Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 2)).tag(2.0)
-                Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 3)).tag(3.0)
-                Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 5)).tag(5.0)
-                Text(String(format: NSLocalizedString("settings.seconds", comment: ""), 10)).tag(10.0)
-            }
-            .pickerStyle(.menu)
-
             Picker("settings.menubar_badge", selection: $menuBarBadge) {
                 Text("settings.badge.always").tag("always")
                 Text("settings.badge.active_only").tag("active")

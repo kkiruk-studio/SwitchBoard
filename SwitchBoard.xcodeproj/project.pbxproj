@@ -28,6 +28,9 @@
 		A1000012 /* SB_attention.aiff in Resources */ = {isa = PBXBuildFile; fileRef = A200000D8 /* SB_attention.aiff */; };
 		A1000013 /* MCPDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* MCPDetector.swift */; };
 		A1000014 /* PricingTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* PricingTable.swift */; };
+		A1000015 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* main.swift */; };
+		A1000016 /* NotifyCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000015 /* NotifyCLI.swift */; };
+		A1000017 /* HookInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* HookInstaller.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +60,9 @@
 		A2000011 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A2000012 /* MCPDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetector.swift; sourceTree = "<group>"; };
 		A2000013 /* PricingTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingTable.swift; sourceTree = "<group>"; };
+		A2000014 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A2000015 /* NotifyCLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyCLI.swift; sourceTree = "<group>"; };
+		A2000016 /* HookInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HookInstaller.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +88,11 @@
 		A4000002 /* SwitchBoard */ = {
 			isa = PBXGroup;
 			children = (
+				A2000014 /* main.swift */,
 				A2000001 /* SwitchBoardApp.swift */,
 				A2000002 /* AppDelegate.swift */,
+				A2000015 /* NotifyCLI.swift */,
+				A2000016 /* HookInstaller.swift */,
 				A2000003 /* SessionManager.swift */,
 				A2000004 /* Session.swift */,
 				A2000012 /* MCPDetector.swift */,
@@ -200,8 +209,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1000015 /* main.swift in Sources */,
 				A1000001 /* SwitchBoardApp.swift in Sources */,
 				A1000002 /* AppDelegate.swift in Sources */,
+				A1000016 /* NotifyCLI.swift in Sources */,
+				A1000017 /* HookInstaller.swift in Sources */,
 				A1000003 /* SessionManager.swift in Sources */,
 				A1000004 /* Session.swift in Sources */,
 				A1000013 /* MCPDetector.swift in Sources */,
@@ -291,7 +303,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = NB6Y67C2PV;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -302,7 +314,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.kkiruk.switchboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -319,7 +331,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = NB6Y67C2PV;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -331,7 +343,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.kkiruk.switchboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

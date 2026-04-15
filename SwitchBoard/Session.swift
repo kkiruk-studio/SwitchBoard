@@ -64,6 +64,7 @@ struct Session: Identifiable {
     let pid: Int
     let tty: String
     let cwd: String
+    let claudeSessionId: String
     var inputTokens: Int = 0
     var outputTokens: Int = 0
     var cacheReadTokens: Int = 0

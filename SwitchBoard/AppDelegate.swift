@@ -32,6 +32,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         PricingTable.loadCached()
         PricingTable.refreshIfStale()
 
+        // Claude Code 훅 자동 설치 + 이벤트 수신자 등록
+        HookInstaller.installOrUpdate()
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(handleHookEvent(_:)),
+            name: Notification.Name(NotifyCLI.notificationName),
+            object: nil
+        )
+
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
             let sizeConfig = NSImage.SymbolConfiguration(pointSize: 13, weight: .medium)
@@ -101,6 +110,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         if sm.hasWorking { return .systemBlue }
         if sm.allDoneOrIdle { return .systemGreen }
         return nil
+    }
+
+    @objc private func handleHookEvent(_ notification: Notification) {
+        guard let info = notification.userInfo as? [String: String] else { return }
+        let kind = info["kind"] ?? "done"
+        let sessionId = info["session_id"] ?? ""
+        let cwd = info["cwd"] ?? ""
+        let message = info["message"] ?? ""
+        Task { @MainActor in
+            self.sessionManager?.handleHookEvent(kind: kind, claudeSessionId: sessionId, cwd: cwd, message: message)
+        }
     }
 
     @objc private func statusItemClicked() {
