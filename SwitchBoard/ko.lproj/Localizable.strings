@@ -96,3 +96,5 @@
 "settings.show_cost_note" = "하단에 토큰 사용량 설명 표시";
 "settings.show_cost_estimate" = "환산가 표시";
 "settings.show_cost_estimate.desc" = "토큰 사용량을 API 기준으로 환산한 금액입니다. 구독(Pro/Max) 실제 청구와는 무관합니다.";
+"settings.blink_on_status_change" = "완료/입력 대기 시 카드 깜빡이기";
+"settings.blink_on_status_change.desc" = "작업이 완료되거나 입력 대기 상태로 바뀐 세션 카드를 깜빡여 눈에 띄게 합니다. 클릭하면 해제됩니다.";

@@ -96,3 +96,5 @@
 "settings.show_cost_note" = "フッターにトークン使用量の説明を表示";
 "settings.show_cost_estimate" = "換算価格を表示";
 "settings.show_cost_estimate.desc" = "トークン使用量をAPI基準で換算した金額です。サブスクリプション（Pro/Max）の実請求とは無関係です。";
+"settings.blink_on_status_change" = "完了 / 入力待ち時にカードを点滅";
+"settings.blink_on_status_change.desc" = "作業が完了または入力待ちになったセッションカードを点滅で目立たせます。カードをクリックすると解除されます。";

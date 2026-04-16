@@ -33,6 +33,7 @@ If you run multiple Claude Code instances across different terminal tabs, Switch
 - **History timeline** — View status transitions over time
 - **Click to focus** — Jump to the corresponding terminal/IDE window
 - **Terminate sessions** — Kill a session via right-click context menu
+- **Attention pulse** — Cards pulse when work completes or input is required, and unacknowledged sessions sort first within their status. Click the card (or send a new prompt) to dismiss. Toggle off in Preferences.
 
 ### Menu bar
 - **Live badge** — Shows active session count (e.g. `1/4`) next to the icon

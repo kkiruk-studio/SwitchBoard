@@ -96,3 +96,5 @@
 "settings.show_cost_note" = "Show token usage note in footer";
 "settings.show_cost_estimate" = "Show cost estimate";
 "settings.show_cost_estimate.desc" = "Token usage converted to API-equivalent cost. Not related to your actual Pro/Max subscription billing.";
+"settings.blink_on_status_change" = "Blink card on completion / input needed";
+"settings.blink_on_status_change.desc" = "Session cards pulse when work completes or input is required. Click the card to dismiss.";

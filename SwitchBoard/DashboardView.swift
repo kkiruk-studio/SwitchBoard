@@ -6,6 +6,7 @@ enum ViewMode: String {
 
 struct DashboardView: View {
     @AppStorage("hideCostEstimate") private var hideCostEstimate = false
+    @AppStorage("blinkOnStatusChange") private var blinkOnStatusChange = true
     @ObservedObject var sessionManager: SessionManager
     @AppStorage("viewMode") private var viewMode: String = ViewMode.grid.rawValue
     @State private var currentTime = Date()
@@ -178,8 +179,15 @@ struct DashboardView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(filteredSessions) { session in
-                    SessionTileView(session: session, onTerminate: { sessionManager.terminateSession(session) })
-                        .onTapGesture { sessionManager.focusTerminal(session: session) }
+                    SessionTileView(
+                        session: session,
+                        isBlinking: blinkOnStatusChange && sessionManager.blinkingSessionIds.contains(session.id),
+                        onTerminate: { sessionManager.terminateSession(session) }
+                    )
+                        .onTapGesture {
+                            sessionManager.acknowledgeBlink(session: session)
+                            sessionManager.focusTerminal(session: session)
+                        }
                         .opacity(draggingId == session.id ? 0.4 : 1)
                         .onDrag {
                             draggingId = session.id
@@ -204,8 +212,15 @@ struct DashboardView: View {
         ScrollView {
             LazyVStack(spacing: 6) {
                 ForEach(filteredSessions) { session in
-                    SessionRowView(session: session, onTerminate: { sessionManager.terminateSession(session) })
-                        .onTapGesture { sessionManager.focusTerminal(session: session) }
+                    SessionRowView(
+                        session: session,
+                        isBlinking: blinkOnStatusChange && sessionManager.blinkingSessionIds.contains(session.id),
+                        onTerminate: { sessionManager.terminateSession(session) }
+                    )
+                        .onTapGesture {
+                            sessionManager.acknowledgeBlink(session: session)
+                            sessionManager.focusTerminal(session: session)
+                        }
                         .opacity(draggingId == session.id ? 0.4 : 1)
                         .onDrag {
                             draggingId = session.id
@@ -249,11 +264,13 @@ struct DashboardView: View {
 
 struct SessionTileView: View {
     let session: Session
+    var isBlinking: Bool = false
     var onTerminate: (() -> Void)?
     @AppStorage("hideCostEstimate") private var hideCostEstimate = false
     @State private var isEditingMemo = false
     @State private var memoText = ""
     @State private var showMCPPopover = false
+    @State private var pulseOpacity: Double = 1.0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -406,10 +423,29 @@ struct SessionTileView: View {
                 .stroke(tileBorderColor, lineWidth: 1.5)
         )
         .contentShape(Rectangle())
+        .opacity(pulseOpacity)
         .onHover { hovering in
             if hovering { NSCursor.pointingHand.push() }
             else { NSCursor.pop() }
         }
+        .task(id: isBlinking) {
+            await runPulseLoop()
+        }
+    }
+
+    private func runPulseLoop() async {
+        guard isBlinking else {
+            withAnimation(.easeInOut(duration: 0.2)) { pulseOpacity = 1.0 }
+            return
+        }
+        while !Task.isCancelled {
+            withAnimation(.easeInOut(duration: 0.4)) { pulseOpacity = 0.15 }
+            do { try await Task.sleep(nanoseconds: 400_000_000) } catch { break }
+            if Task.isCancelled { break }
+            withAnimation(.easeInOut(duration: 0.4)) { pulseOpacity = 1.0 }
+            do { try await Task.sleep(nanoseconds: 400_000_000) } catch { break }
+        }
+        withAnimation(.easeInOut(duration: 0.2)) { pulseOpacity = 1.0 }
     }
 
     private var mcpCompactLabel: String {
@@ -442,10 +478,12 @@ struct SessionTileView: View {
 
 struct SessionRowView: View {
     let session: Session
+    var isBlinking: Bool = false
     var onTerminate: (() -> Void)?
     @AppStorage("hideCostEstimate") private var hideCostEstimate = false
     @State private var isEditingMemo = false
     @State private var memoText = ""
+    @State private var pulseOpacity: Double = 1.0
 
     var body: some View {
         HStack(spacing: 10) {
@@ -532,7 +570,11 @@ struct SessionRowView: View {
         .padding(.vertical, 8)
         .background(Color.primary.opacity(0.04))
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .opacity(pulseOpacity)
         .onAppear { memoText = session.memo }
+        .task(id: isBlinking) {
+            await runPulseLoop()
+        }
         .contextMenu {
             Button(session.memo.isEmpty ? "session.add_memo" : "session.edit_memo") {
                 memoText = session.memo
@@ -551,6 +593,21 @@ struct SessionRowView: View {
                 }
             }
         }
+    }
+
+    private func runPulseLoop() async {
+        guard isBlinking else {
+            withAnimation(.easeInOut(duration: 0.2)) { pulseOpacity = 1.0 }
+            return
+        }
+        while !Task.isCancelled {
+            withAnimation(.easeInOut(duration: 0.4)) { pulseOpacity = 0.15 }
+            do { try await Task.sleep(nanoseconds: 400_000_000) } catch { break }
+            if Task.isCancelled { break }
+            withAnimation(.easeInOut(duration: 0.4)) { pulseOpacity = 1.0 }
+            do { try await Task.sleep(nanoseconds: 400_000_000) } catch { break }
+        }
+        withAnimation(.easeInOut(duration: 0.2)) { pulseOpacity = 1.0 }
     }
 }
 

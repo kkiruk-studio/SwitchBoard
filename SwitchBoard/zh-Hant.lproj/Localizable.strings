@@ -96,3 +96,5 @@
 "settings.show_cost_note" = "在底部顯示 Token 用量說明";
 "settings.show_cost_estimate" = "顯示價格換算";
 "settings.show_cost_estimate.desc" = "依 API 價格換算的金額。與訂閱（Pro/Max）實際帳單無關。";
+"settings.blink_on_status_change" = "完成 / 等待輸入時閃爍卡片";
+"settings.blink_on_status_change.desc" = "工作完成或需要輸入時讓工作階段卡片閃爍以便注意。點擊卡片即可取消。";

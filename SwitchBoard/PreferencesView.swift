@@ -35,6 +35,7 @@ private struct GeneralTab: View {
     @AppStorage("alwaysOnTop") private var alwaysOnTop = false
     @AppStorage("menuBarBadge") private var menuBarBadge = "always"
     @AppStorage("hideCostEstimate") private var hideCostEstimate = false
+    @AppStorage("blinkOnStatusChange") private var blinkOnStatusChange = true
     @State private var launchAtLogin = false
 
     var body: some View {
@@ -52,6 +53,13 @@ private struct GeneralTab: View {
                     set: { hideCostEstimate = !$0 }
                 ))
                 Text("settings.show_cost_estimate.desc")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                Toggle("settings.blink_on_status_change", isOn: $blinkOnStatusChange)
+                Text("settings.blink_on_status_change.desc")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

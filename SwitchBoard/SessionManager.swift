@@ -29,6 +29,8 @@ final class SessionManager: ObservableObject {
     @AppStorage("telegramChatId") var telegramChatId = ""
     @AppStorage("telegramEnabled") var telegramEnabled = false
     @Published var sessions: [Session] = []
+    /// 사용자가 아직 확인하지 않은 done/needs_input 세션 id(PID). 확인(클릭) 또는 working 전환 시 제거.
+    @Published var blinkingSessionIds: Set<String> = []
     private var customOrder: [String] = [] // 사용자 정렬 순서 (PID 목록)
     private var previousStatuses: [String: SessionStatus] = [:] // 상태 전환 감지(히스토리 기록용)
     private var tokenAccumulator: [String: (input: Int, output: Int, cacheRead: Int, cacheWrite: Int, cost: Double)] = [:] // 세션별 누적 토큰 + 금액
@@ -153,10 +155,17 @@ final class SessionManager: ObservableObject {
                 return li < ri
             }
         } else {
-            // 상태별 동적 정렬
+            // 상태별 동적 정렬 — 깜빡임 설정 켜진 경우 같은 상태 안에서 미확인 세션이 먼저
+            let blinkEnabled = UserDefaults.standard.object(forKey: "blinkOnStatusChange") as? Bool ?? true
+            let blinking = blinkingSessionIds
             result.sort { lhs, rhs in
                 if lhs.status.sortOrder != rhs.status.sortOrder {
                     return lhs.status.sortOrder < rhs.status.sortOrder
+                }
+                if blinkEnabled {
+                    let lb = blinking.contains(lhs.id)
+                    let rb = blinking.contains(rhs.id)
+                    if lb != rb { return lb }
                 }
                 return (lhs.updatedDate ?? .distantPast) > (rhs.updatedDate ?? .distantPast)
             }
@@ -183,6 +192,11 @@ final class SessionManager: ObservableObject {
         // 엔트리당 메모리 비용이 극히 작으므로 그대로 유지한다.
         ttyCache = ttyCache.filter { currentPids.contains($0.key) }
         hookStatus = hookStatus.filter { currentSessionIds.contains($0.key) }
+        // 살아있는 세션 중 현재 상태가 done/needs_input인 것만 깜빡임 유지
+        let shouldBlinkIds = Set(result
+            .filter { $0.status == .done || $0.status == .needs_input }
+            .map { $0.id })
+        blinkingSessionIds = blinkingSessionIds.intersection(shouldBlinkIds)
 
         sessions = result
     }
@@ -264,6 +278,12 @@ final class SessionManager: ObservableObject {
             cacheReadTokens: m.cacheReadTokens, cacheWriteTokens: m.cacheWriteTokens,
             estimatedCost: m.estimatedCost, mcpServers: m.mcpServers
         )
+        // 깜빡임 토글: done/needs_input은 확인 필요 상태로 표시, 그 외는 해제
+        if status == .done || status == .needs_input {
+            blinkingSessionIds.insert(m.id)
+        } else {
+            blinkingSessionIds.remove(m.id)
+        }
         return sessions[idx]
     }
 
@@ -531,7 +551,13 @@ final class SessionManager: ObservableObject {
         // 다음 폴링에서 상태 반영됨
     }
 
+    /// 깜빡임 명시적 해제 (사용자 클릭/컨텍스트 메뉴 진입 등)
+    func acknowledgeBlink(session: Session) {
+        blinkingSessionIds.remove(session.id)
+    }
+
     func focusTerminal(session: Session) {
+        blinkingSessionIds.remove(session.id)
         guard !session.tty.isEmpty else { return }
 
         // 터미널 앱 감지: pid의 최상위 부모 프로세스 이름으로 판단
